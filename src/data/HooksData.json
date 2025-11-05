@@ -1,91 +1,76 @@
 {
   "HooksData":[
     {
-      "key": 1,
       "titulo": "useState",
       "subtitulo": "El punto de partida",
       "descripcion": "Permite agregar y gestionar estado local en componentes funcionales. Es el hook base para controlar valores que cambian, como formularios, contadores o banderas de carga."
     },
     {
-      "key": 2,
       "titulo": "useEffect",
       "subtitulo": "Efectos secundarios",
       "descripcion": "Permite ejecutar código en respuesta a cambios en el componente, como llamadas a APIs, timers o sincronización de datos. Reemplaza los ciclos de vida de las clases."
     },
     {
-      "key": 3,
       "titulo": "useContext",
       "subtitulo": "Compartir datos globales",
       "descripcion": "Facilita el acceso a valores globales sin pasar props manualmente. Ideal para temas como idioma, autenticación o configuración de UI."
     },
     {
-      "key": 4,
       "titulo": "useRef",
       "subtitulo": "Referencias persistentes",
       "descripcion": "Crea una referencia mutable que persiste entre renders. Útil para acceder a elementos del DOM o mantener valores sin provocar re-renderizados."
     },
     {
-      "key": 5,
       "titulo": "useMemo",
       "subtitulo": "Optimización de rendimiento",
       "descripcion": "Memoriza el resultado de una función costosa y solo la recalcula si cambian sus dependencias. Ayuda a evitar cálculos innecesarios."
     },
     {
-      "key": 6,
       "titulo": "useCallback",
       "subtitulo": "Memorización de funciones",
       "descripcion": "Devuelve una versión memorizada de una función, evitando que se recree en cada render. Mejora el rendimiento en componentes hijos."
     },
     {
-      "key": 7,
       "titulo": "useReducer",
       "subtitulo": "Gestión avanzada de estado",
       "descripcion": "Alternativa a useState para manejar estados más complejos. Utiliza un reducer y acciones, similar a Redux pero dentro del componente."
     },
     {
-      "key": 8,
       "titulo": "useLayoutEffect",
       "subtitulo": "Ejecución sincronizada con el DOM",
       "descripcion": "Similar a useEffect, pero se ejecuta justo después de que el DOM ha sido modificado, antes del repintado del navegador."
     },
     {
-      "key": 9,
       "titulo": "useImperativeHandle",
       "subtitulo": "Controlar referencias expuestas",
       "descripcion": "Permite personalizar los valores expuestos cuando se usa React.forwardRef. Útil para encapsular comportamientos en componentes reutilizables."
     },
     {
-      "key": 10,
       "titulo": "useId",
       "subtitulo": "Identificadores únicos",
       "descripcion": "Genera IDs únicos y estables entre renders. Ideal para accesibilidad o asociar etiquetas e inputs."
     },
     {
-      "key": 11,
       "titulo": "useTransition",
       "subtitulo": "Actualizaciones no bloqueantes",
       "descripcion": "Permite marcar ciertas actualizaciones como de baja prioridad para mantener la interfaz fluida incluso durante tareas pesadas."
     },
     {
-      "key": 12,
       "titulo": "useDeferredValue",
       "subtitulo": "Valores diferidos",
       "descripcion": "Retrasa la actualización de un valor hasta que el navegador esté listo, mejorando la experiencia en interfaces interactivas."
     },
     {
-      "key": 13,
       "titulo": "useSyncExternalStore",
       "subtitulo": "Suscripción a stores externos",
       "descripcion": "Garantiza actualizaciones consistentes cuando un componente se suscribe a un store externo (por ejemplo, Redux o Zustand)."
     },
     {
-      "key": 14,
       "titulo": "useInsertionEffect",
       "subtitulo": "Efectos de inserción en el DOM",
       "descripcion": "Se ejecuta antes de que el navegador aplique cambios al DOM. Usado por librerías de estilos en tiempo de ejecución."
     },
     {
-      "key": 15,
       "titulo": "useActionState",
       "subtitulo": "Manejo de acciones asincrónicas (React 19+)",
       "descripcion": "Permite manejar el estado de acciones (como formularios o peticiones) directamente en el componente con soporte nativo para async/await."
