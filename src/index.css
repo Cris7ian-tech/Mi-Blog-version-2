@@ -1,6 +1,19 @@
+/* @import "tailwindcss";
+
+
+body  {
+  background-color: #3a3a41;
+} */
+
 @import "tailwindcss";
 
+/* Definís tu tema acá */
+@theme {
+  --color-primary: #3a3a41;
+  --color-secondary: #816797;
+}
 
+/* Estilos opcionales */
 body {
-  background: rgb(59, 59, 59);
+  @apply bg-primary text-white;
 }

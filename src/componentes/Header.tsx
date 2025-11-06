@@ -8,7 +8,7 @@ const Header = () => {
       
       <nav className="flex flex-row justify-between items-center py-7">
         
-        <a href="/" className="text-2xl font-light text-orange-500">
+        <a href="/" className="text-2xl font-light text-white">
         MyBlog
         </a>
 
@@ -16,7 +16,7 @@ const Header = () => {
           <li>
             <a 
             href="#Blog"
-            className="text-sm font-medium decoration-cyan-900 decoration-2 underline-offset-8 hover:text-amber-600"
+            className="text-lg font-medium text-white decoration-2 underline-offset-8 hover:text-cyan-200"
             >
             Blog
             </a>
@@ -25,7 +25,7 @@ const Header = () => {
           <li>
             <a 
             href="#Contacto"
-            className="text-sm font-medium decoration-cyan-900 decoration-2 underline-offset-8 hover:text-amber-600"
+            className="text-lg font-medium text-white decoration-2 underline-offset-8 hover:text-cyan-200"
             >
             Contacto
             </a>

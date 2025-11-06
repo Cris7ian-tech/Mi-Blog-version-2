@@ -2,12 +2,12 @@
 /*Componente Padre: Card */
 interface CardProps {
   children: React.ReactNode;
-  className?: string
+  className?: string;
 }
 
-const Card = ({children}: CardProps) => {
+const Card = ({ children }: CardProps) => {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden w-80 flex flex-col">
+    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-visible w-80 flex flex-col relative">
       {children}
     </div>
   )
@@ -20,7 +20,7 @@ interface CardHeaderProps {
 
 const CardHeader = ({children}: CardHeaderProps) => {
   return (
-    <div className="bg-gray-300 px-4 py-3 font-semibold text-gray-800">
+    <div className="bg-gray-100 px-4 py-2 font-semibold text-gray-800">
       {children}
     </div>
   )
@@ -28,30 +28,27 @@ const CardHeader = ({children}: CardHeaderProps) => {
 
 /* Componente Hijo: CardBody */
 interface CardBodyProps {
-  children: React.ReactNode
+  children: React.ReactNode;
+  className?: string;
 }
 
-const CardBody = ({children}: CardBodyProps) => {
-  return (
-    <div className="text-gray-700">
-      {children}
-
-    </div>
-  )
-}
+const CardBody = ({ children, className = "" }: CardBodyProps) => {
+  return <div className={`p-4 text-gray-700 ${className}`}>{children}</div>;
+};
 
 /* Componente Hijo: CardFooter */
 interface CardFooterProps {
   children: React.ReactNode
 }
 
-const CardFooter = ({children}: CardFooterProps) => {
+const CardFooter = ({ children }: CardFooterProps) => {
   return (
-    <div>
+    <div
+      className={`absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-3`}>
       {children}
     </div>
-  )
-}
+  );
+};
 /* Asignar los componentes*/
 Card.Header = CardHeader;
 Card.Body = CardBody;

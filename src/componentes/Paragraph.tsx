@@ -2,7 +2,7 @@
 
 const Paragraph = () => {
   return (
-    <div>
+    <div className="bg-primary">
 
       Paragraph
       

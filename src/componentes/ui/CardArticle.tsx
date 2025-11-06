@@ -10,7 +10,7 @@ function CardArticle({titulo, subtitulo, descripcion}: CardArticleProps) {
   const [expandida, setExpandida] = useState(false);
   
   const esLarga = descripcion.length > 120;
-  const textoVisible = expandida ? descripcion : esLarga ? descripcion.substring(0, 120) + "..." : descripcion ;
+  const textoVisible = expandida ? descripcion : esLarga ? descripcion.substring(0, 80) + "..." : descripcion ;
 
   return (
     <>
@@ -18,7 +18,7 @@ function CardArticle({titulo, subtitulo, descripcion}: CardArticleProps) {
       transform transition-all duration-300 hover:translate-y-lg hover:shadow-cyan-500/20 hover:border-cyan-600
       ">
           <div>
-            <h3 className="text-xl font-bold mb-2 text-white">{ titulo }</h3>
+            <h3 className="text-xl font-bold mb-2 text-white tracking-wider">{ titulo }</h3>
             <h4 className= "text-gray-200 font-semibold">{ subtitulo }</h4>
               
                 <p className="text-gray-300 mb-4">{ textoVisible }</p>
