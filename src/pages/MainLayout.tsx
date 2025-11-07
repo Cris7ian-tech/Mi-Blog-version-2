@@ -38,7 +38,7 @@ const MainLayout = () => {
 
 
           {/* Articulos*/}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div className="grid [grid-template-columns:repeat(auto-fit,minmax(350px,1fr))] gap-4 mt-4 transition-all duration-300">
 
           {hooksData.HooksData.map((hook, index) =>(
           <CardArticle 

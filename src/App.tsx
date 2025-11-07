@@ -17,7 +17,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<MainLayout />}/>
-        <Route path="blog" element={<Blog />}/>
+        <Route path="/blog" element={<Blog />}/>
         <Route path="/contacto" element={<Contacto />}/>
       </Routes>
       <Footer />

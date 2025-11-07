@@ -7,11 +7,11 @@ const Header = () => {
   return (
 
     <>
-      <header className="px-22 bg-neutral-900 shadow-sm">
+      <header className="px-22 bg-neutral-800 shadow-sm shadow-red-300/20">
       
         <nav className="flex flex-col md:flex-row justify-between py-4">
           
-          <a href="/" className="hidden md:block text-xl font-bold text-white mb-4 md:mb-0">
+          <a href="/" className="hidden md:block text-2xl font-bold text-white mb-4 md:mb-0">
           MyBlog
           </a>
 
@@ -41,7 +41,7 @@ const Header = () => {
                       <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </div>
-          {/* NAVEGACION MOBILE OPEN (md:flex-row space-y-4 md:space-y-0 md:space-x-4 CODIGO REEMPLAZADO)*/}
+          {/* NAVEGACION MOBILE OPEN */}
               <ul className="flex flex-col items-center justify-between min-h-[250px]">
                 <li className="border-b border-gray-600 my-8 uppercase">
                   <NavLink
@@ -76,7 +76,7 @@ const Header = () => {
           </section>
 
           {/* NAVEGACION DESKTOP */}
-          <ul className="hidden space-x-8 md:flex">
+          <ul className="hidden text-lg space-x-8 md:flex">
             <li>
                 <NavLink
                 to="/"
