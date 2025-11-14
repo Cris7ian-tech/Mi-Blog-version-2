@@ -1,5 +1,5 @@
 import hooksData from '../data/HooksData.json'
-import CardArticle from '../componentes/ui/CardArticle'
+import CardArticle from '../componentes/ui/CardArticle.tsx'
 
 const MainLayout = () => {
   return (
@@ -38,7 +38,11 @@ const MainLayout = () => {
 
 
           {/* Articulos*/}
-        <div className="grid [grid-template-columns:repeat(auto-fit,minmax(350px,1fr))] gap-4 mt-4 transition-all duration-300">
+        <div className="grid 
+                        [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]
+                        md:grid-cols-3 
+                        gap-4 mt-4 
+                        transition-all duration-300">
 
           {hooksData.HooksData.map((hook, index) =>(
           <CardArticle 
