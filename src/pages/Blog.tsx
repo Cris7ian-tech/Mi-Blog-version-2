@@ -1,7 +1,16 @@
+import { useState } from "react";
+
 import Card from "../componentes/ui/Card"
+import Pagination from "../componentes/Pagination.tsx";
+
+import Share from "../assets/share.svg";
+
+
 
 
 const Blog = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   return (
     <section className="min-h-screen flex flex-col items-center justify-center p-8">
       <h2 className="text-3xl font-bold text-white mb-8">Artículos recientes</h2>
@@ -26,13 +35,18 @@ const Blog = () => {
 
           <Card.Footer>
             <div className="flex gap-4">
-              <button className="w-[132px] h-[42px] bg-[#eb7d69] text-white rounded-full hover:bg-[#e65238] hover:-translate-x-2 hover:scale-125 transition-all">
+              <button className="w-[132px] h-[42px] bg-[#eb7d69] text-white rounded-full hover:bg-[#e65238] 
+              hover:-translate-x-2 hover:scale-125 transition-all"
+              >
                 Leer post
               </button>
-              <button className="flex items-center justify-center bg-neutral-800 border border-white w-10 h-10 rounded-full hover:translate-x-2 hover:scale-125 transition-all">
+
+              <button className="flex items-center justify-center bg-neutral-800 border border-white w-10 h-10 rounded-full 
+              hover:translate-x-2 hover:scale-125 transition-all"
+              >
                 <img
                   className="w-4 h-4"
-                  src="/src/assets/share.svg"
+                  src={Share}
                   alt="Compartir"
                 />
               </button>
@@ -40,6 +54,13 @@ const Blog = () => {
           </Card.Footer>
         </Card>
       </div>
+
+      
+      <Pagination 
+      currentPage={currentPage} 
+      totalPages={10} 
+      onPageChange={setCurrentPage} />
+      
     </section>
   );
 };
