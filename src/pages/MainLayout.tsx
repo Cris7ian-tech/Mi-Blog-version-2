@@ -1,6 +1,8 @@
 import hooksData from '../data/HooksData.json'
 import CardArticle from '../componentes/ui/CardArticle.tsx'
 
+import React from "../assets/react.svg";
+
 const MainLayout = () => {
   return (
     <>
@@ -10,7 +12,7 @@ const MainLayout = () => {
           {/* Imagen */}
           <div className="bg-secondary md:col-span-2 rounded-lg w-full h-full object-cover hover:shadow-lg ease-in duration-300">
             <img
-            src="/src/assets/react.svg"
+            src={React}
             alt="react logo"
             className="w-full h-full object-cover rounded-lg"/>
           </div>
@@ -39,7 +41,8 @@ const MainLayout = () => {
 
           {/* Articulos*/}
         <div className="grid 
-                        [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]
+                        grid-cols-[repeat(auto-fit,minmax(320px,1fr))]
+                        sm:grid-cols-2
                         md:grid-cols-3 
                         gap-4 mt-4 
                         transition-all duration-300">
