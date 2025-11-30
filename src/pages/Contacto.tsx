@@ -12,6 +12,8 @@ const Contacto = () => {
   // ✅ Inicializados como arrays vacíos
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [filteredPokemonList, setFilteredPokemonList] = useState<Pokemon[]>([]);
+  // ✅ Crear el Estado de Carga
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // ✅ URL para obtener una LISTA de Pokémon (e.g., los primeros 150)
@@ -28,9 +30,14 @@ const Contacto = () => {
         // ✅ Inicializa la lista filtrada con todos los Pokémon
         setFilteredPokemonList(data.results);
       })
-      .catch(error => {
-        console.error("Error fetching data:", error);
-      });
+      // .catch(error => {
+      //   console.error("Error fetching data:", error);
+      // });
+      
+      //✅ FINALLY: Se ejecuta después de .then o .catch
+      .finally(() => {
+        setIsLoading(false); //apagamos interruptor de carga
+      })
   }, []);
 
 
@@ -52,11 +59,23 @@ const Contacto = () => {
     <>
       <h1 className="text-primary-500 text-6xl text-center font-bold">Contacto</h1>
 
-      <div className="flex flex-col items-center justify-center mt-20 gap-4">
-        <h3 className="text-2xl text-amber-50 font-bold">Buscar Pokemon</h3>
+      {/* 3. ✅ Renderizado Condicional */}
+      {isLoading ? (
+        // Muestra el mensaje de carga mientras isLoading es true
+        <div className="flex justify-center items-center mt-20">
+          <p className="text-4xl text-blue-400 font-bold">
+            Cargando Pokémon... ⏳
+          </p>
+        </div>
+
+      ) : (
+        // Muestra el contenido principal si isLoading es false
+        <div className="flex flex-col items-center justify-center mt-20 gap-4">
+          <h3 className="text-2xl text-amber-50 font-bold">Buscar Pokemon</h3>
 
         <input
           onChange={(event) => filterSearch(event.target.value)}
+          value={inputValue}
           className="w-96 h-10 rounded-full p-4 border text-lg text-amber-100 border-amber-50 bg-stone-600 opacity-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="search"
           placeholder="🔍  iniciar busqueda "
@@ -79,6 +98,7 @@ const Contacto = () => {
         </ul>
 
       </div>
+      )}
     </>
   )
 }
