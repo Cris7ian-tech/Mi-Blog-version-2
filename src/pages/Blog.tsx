@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import Card from "../componentes/ui/Card"
 import Pagination from "../componentes/Pagination.tsx";
-import CardNoticias from"../componentes/ui/CardNoticias.tsx"
+// import CardNoticias from"../componentes/ui/CardNoticias.tsx"
 
 import Share from "../assets/share.svg";
 
@@ -63,12 +63,12 @@ const Blog = () => {
         totalPages={10} 
         onPageChange={setCurrentPage} />
         
-        <CardNoticias
+        {/* <CardNoticias
         titulo={titulo};
         empresa={empresa};
         ubicacion={ubicacion};
         descripcion={descripcion};
-        />
+        /> */}
 
       </section>
     </>
