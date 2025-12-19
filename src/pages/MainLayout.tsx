@@ -1,9 +1,62 @@
-import hooksData from '../data/HooksData.json'
+//Para Pokedex:
+import { useState, useEffect } from 'react';
 import CardArticle from '../componentes/ui/CardArticle.tsx'
-
+import hooksData from '../data/hooksData.json';
 import React from "../assets/react.svg";
+import PokeGrid from '../componentes/PokeGrid.tsx';
+import SearchBar from '../componentes/ui/SearchBar.tsx';
+
+// Definimos el molde aquí también para que el estado lo reconozca
+interface PokemonBase {
+  name: string;
+  url: string;
+}
+
 
 const MainLayout = () => {
+
+  //Para Pokedex: 
+  // paso 1 - conseguimos 20 nombres "pokemon" 
+  // paso 2 - se los pasamos al componente PokeCard
+  // paso 3 - Pokegrid crea 20 PokeCard
+  const [pokemonList, setPokemonList] = useState<PokemonBase[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+//Conexion a la API logica
+  useEffect(() => {
+    async function fetchPokemon() {
+      try {
+        setLoading(true) //encendemos el interruptor de carga
+
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=20`);
+        const data = await response.json();
+        //guardamos solo los resultados: nombres y urls
+        setPokemonList(data.results);
+        console.log("¡Tengo datos!", data.results.length)
+
+      } catch (error) {
+        console.error("Error al traer los Pokemon:", error)
+      } finally {
+        //pase lo que pase apagamos el interruptor de carga
+        setLoading(false);
+      } 
+    }
+    fetchPokemon();
+    
+  }, []); //[] para que se ejecute solo una vez al montar el componente
+
+  //Logica de filtrado Pokemons
+  const filteredPokemon = pokemonList.filter((pokemon) => {
+  return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
+});
+
+  //Renderizado condicional:
+  if(loading){
+    return <p className="text-white text-center mt-20">Cargando Pokemones...</p>;
+  }
+
   return (
     <>
 
@@ -55,7 +108,17 @@ const MainLayout = () => {
           ))}
         </div>
 
+      {/*Pokedex: */}
+      <h1>MPokedex</h1>
+      <SearchBar onSearch={(value) => 
+        setSearchTerm(value)} 
+        />
+      <PokeGrid 
+      pokemons={filteredPokemon}
+      />
       </main> 
+
+  
     
     </>
   )
