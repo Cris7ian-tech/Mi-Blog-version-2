@@ -109,7 +109,7 @@ const MainLayout = () => {
         </div>
 
       {/*Pokedex: */}
-      <h1>MPokedex</h1>
+      <h1 className="text-2xl text-white font-bold py-4 text-center">MPokedex</h1>
       <SearchBar onSearch={(value) => 
         setSearchTerm(value)} 
         />
