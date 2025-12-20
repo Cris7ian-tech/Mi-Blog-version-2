@@ -23,8 +23,10 @@ const MainLayout = () => {
   const [loading, setLoading] = useState(true);
   // nuevo estado: boton cargar mas
   const [offset, setOffset] = useState(0);
-
   const [searchTerm, setSearchTerm] = useState("");
+  
+  //Filtrado por tipo de Pokemon (tierra, fuego, agua, etc.)
+  const [selectedType, setSelectedType] = useState("todos");
 
 // 2. Función para cargar (la sacamos del useEffect para poder usarla en el botón)
 const fetchPokemon = async (currentOffset: number) => {
@@ -35,7 +37,12 @@ const fetchPokemon = async (currentOffset: number) => {
     );
     const data = await response.json();
     //LÓGICA CLAVE: "Copia los que ya tenías y suma los nuevos"
-    setPokemonList(prevList => [...prevList, ...data.results]);
+    setPokemonList(prevList => {
+      const nuevosFiltrados = data.results.filter(
+      (nuevo: PokemonBase) => !prevList.some(existente => existente.name === nuevo.name)
+    );
+    return [...prevList, ...nuevosFiltrados];
+});
   } catch (error) {
     console.error("Error:", error);
   } finally {
@@ -57,7 +64,9 @@ const handleLoadMore = () => {
 
   //Logica de filtrado Pokemons
   const filteredPokemon = pokemonList.filter((pokemon) => {
-  return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
+    //Aquí la lógica: matchesSearch && matchesType
+    return matchesSearch;
 });
 
   return (
