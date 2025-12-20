@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 
 interface SearchBarProps {
@@ -8,6 +8,15 @@ interface SearchBarProps {
 function SearchBar({ onSearch }: SearchBarProps) {
   const [inputValue, setInputValue] = useState("");
   
+  // useRef: Creamos el "cable"(inputRef). Empezamos en null porque el input aún no existe
+  const inputRef = useRef<HTMLInputElement>(null);
+  // useRef: Lógica del Foco Automático
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus(); // Le damos foco al input cuando el componente se monta
+    }
+  }, []);
+
   // Agregamos Lógica de Debounce
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -32,6 +41,7 @@ function SearchBar({ onSearch }: SearchBarProps) {
       <span style={{ position: 'absolute', left: '15px', top: '10px' }}>🔍</span>
       <input 
       type="text"
+      ref={inputRef} // useRef: Asignamos el ref al input para el foco automático
       value= {inputValue}
       placeholder="Busca tu Pokémon..."
       onChange={e => setInputValue(e.target.value)} // Actualizamos el estado con el valor ingresado por el usuarioe}
@@ -46,7 +56,7 @@ function SearchBar({ onSearch }: SearchBarProps) {
       }}
       />
 
-      {/* El Botón "X" para borrar */}
+      {/*  Botón "X" para borrar */}
       {inputValue && (
         <button
           onClick={handleClear}
