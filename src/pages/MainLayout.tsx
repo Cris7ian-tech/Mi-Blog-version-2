@@ -21,41 +21,44 @@ const MainLayout = () => {
   // paso 3 - Pokegrid crea 20 PokeCard
   const [pokemonList, setPokemonList] = useState<PokemonBase[]>([]);
   const [loading, setLoading] = useState(true);
+  // nuevo estado: boton cargar mas
+  const [offset, setOffset] = useState(0);
 
   const [searchTerm, setSearchTerm] = useState("");
 
-//Conexion a la API logica
-  useEffect(() => {
-    async function fetchPokemon() {
-      try {
-        setLoading(true) //encendemos el interruptor de carga
+// 2. Función para cargar (la sacamos del useEffect para poder usarla en el botón)
+const fetchPokemon = async (currentOffset: number) => {
+  try {
+    setLoading(true);
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${currentOffset}`
+    );
+    const data = await response.json();
+    //LÓGICA CLAVE: "Copia los que ya tenías y suma los nuevos"
+    setPokemonList(prevList => [...prevList, ...data.results]);
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=20`);
-        const data = await response.json();
-        //guardamos solo los resultados: nombres y urls
-        setPokemonList(data.results);
-        console.log("¡Tengo datos!", data.results.length)
+//El useEffect ahora solo dispara la primera carga
+useEffect(() => {
+  fetchPokemon(0);
+}, []);
 
-      } catch (error) {
-        console.error("Error al traer los Pokemon:", error)
-      } finally {
-        //pase lo que pase apagamos el interruptor de carga
-        setLoading(false);
-      } 
-    }
-    fetchPokemon();
-    
-  }, []); //[] para que se ejecute solo una vez al montar el componente
+//Función para el botón
+const handleLoadMore = () => {
+  const nextOffset = offset + 20;
+  setOffset(nextOffset); // Actualizamos el estado
+  fetchPokemon(nextOffset); // Pedimos los siguientes
+};
 
   //Logica de filtrado Pokemons
   const filteredPokemon = pokemonList.filter((pokemon) => {
   return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
 });
-
-  //Renderizado condicional:
-  if(loading){
-    return <p className="text-white text-center mt-20">Cargando Pokemones...</p>;
-  }
 
   return (
     <>
@@ -108,17 +111,34 @@ const MainLayout = () => {
           ))}
         </div>
 
-      {/*Pokedex: */}
-      <h1 className="text-2xl text-white font-bold py-4 text-center">MPokedex</h1>
-      <SearchBar onSearch={(value) => 
-        setSearchTerm(value)} 
-        />
-      <PokeGrid 
-      pokemons={filteredPokemon}
-      />
-      </main> 
+          {/* POKEDEX */}
+            <h1 className="text-2xl text-white font-bold py-4 text-center">MPokedex</h1>
+            
+            <SearchBar onSearch={(value) => setSearchTerm(value)} />
+            
+            {/* Mostramos el Grid siempre, esté cargando o no */}
+            <PokeGrid pokemons={filteredPokemon} />
 
-  
+            {/* 4. BOTÓN CARGAR MÁS (Fuera del Grid) */}
+            {!searchTerm && (
+              <div style={{ textAlign: 'center', padding: '30px 0' }}>
+                <button 
+                  onClick={handleLoadMore}
+                  disabled={loading}
+                  style={{
+                    padding: '12px 24px',
+                    backgroundColor: loading ? '#ccc' : '#eb7d69',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '50px',
+                    cursor: loading ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  {loading ? "Buscando Pokémon..." : "Cargar más Pokémon"}
+                </button>
+              </div>
+            )}
+      </main>
     
     </>
   )

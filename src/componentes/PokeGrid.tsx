@@ -28,22 +28,43 @@ function PokeGrid({pokemons}: PokeGridProps) {
     )
   }
   return (
-    <div
-      style={{
-        display: `grid`,
-        gridTemplateColumns: `repeat(auto-fit, minmax(200px, 1fr))`,
-        gap: `20px`,
-        padding: `20px`
-      }}
-      >
-      {pokemons.map((unPokemon) => (
-      <PokeCard 
-        key={unPokemon.name} // Usamos el nombre como clave única
-        name={unPokemon.name} 
-        url={unPokemon.url} 
-      />
-    ))}
-    </div>
+    <section>
+      {/* EL CONTADOR: Lógica simple basada en el length del array recibido */}
+      <div style={{ 
+        textAlign: 'center', 
+        marginBottom: '10px', 
+        color: '#666',
+        fontSize: '0.9rem',
+        fontWeight: 'bold'
+      }}>
+        Mostrando <span style={{ color: '#eb7d69' }}>{pokemons.length}</span> Pokémon
+      </div>
+
+      <div
+        style={{
+          display: 'grid',
+          // auto-fill: llena el espacio con tantas tarjetas como quepan
+          // minmax(160px, 1fr): mínimo 160px, máximo todo el espacio sobrante
+          gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+          gap: '16px',
+          padding: '20px',
+          maxWidth: '1200px', // Centra el contenido en pantallas muy anchas
+          margin: '0 auto'
+          }}
+          >
+        
+        {pokemons.map((unPokemon) => (
+        <PokeCard 
+          key={unPokemon.name} // Usamos el nombre como clave única
+          name={unPokemon.name} 
+          url={unPokemon.url} 
+        />
+      ))}
+      </div>
+    </section>
+
+    
+    
   )
 }
 
