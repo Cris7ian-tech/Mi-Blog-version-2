@@ -1,3 +1,4 @@
+import TypeFilters from '../componentes/ui/TypeFilters.tsx';
 //Para Pokedex:
 import { useState, useEffect } from 'react';
 import CardArticle from '../componentes/ui/CardArticle.tsx'
@@ -124,6 +125,12 @@ const handleLoadMore = () => {
             <h1 className="text-2xl text-white font-bold py-4 text-center">MPokedex</h1>
             
             <SearchBar onSearch={(value) => setSearchTerm(value)} />
+
+            {/* FILTRO POR TIPO DE POKEMON */}
+            <TypeFilters 
+            selectedType={selectedType} 
+            onTypeChange={(type) => setSelectedType(type)} 
+          />
             
             {/* Mostramos el Grid siempre, esté cargando o no */}
             <PokeGrid pokemons={filteredPokemon} />
