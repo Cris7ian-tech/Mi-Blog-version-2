@@ -37,15 +37,33 @@ const fetchPokemon = async (currentOffset: number) => {
       `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${currentOffset}`
     );
     const data = await response.json();
-    //LÓGICA CLAVE: "Copia los que ya tenías y suma los nuevos"
+
+    // ❗ ¡Aca esta la magia! 
+    // Por cada Pokémon básico, creamos una promesa para traer sus detalles
+    const detailPromises = data.results.map(async (pokemon: PokemonBase) => {
+      const res = await fetch(pokemon.url);
+      const details = await res.json();
+
+      return {
+        name: pokemon.name,
+        url: pokemon.url,
+        image: details.sprites.other['official-artwork'].front_default,
+        types: details.types.map((t: any) => t.type.name) // Guardamos array de tipos: ['grass', 'poison']
+      }
+    });
+
+    // Esperamos a que las 20 promesas terminen
+    const fullPokemonData = await Promise.all(detailPromises);
+
+    // 4. Guardamos en el estado con la protección de duplicados
     setPokemonList(prevList => {
-      const nuevosFiltrados = data.results.filter(
-      (nuevo: PokemonBase) => !prevList.some(existente => existente.name === nuevo.name)
-    );
+      const nuevosFiltrados = fullPokemonData.filter(
+        (nuevo) => !prevList.some(existente => existente.name === nuevo.name)
+      );
     return [...prevList, ...nuevosFiltrados];
 });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error al traer los detalles de los henriqueciendo Pokémon:", error);
   } finally {
     setLoading(false);
   }
