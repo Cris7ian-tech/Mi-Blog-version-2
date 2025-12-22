@@ -11,6 +11,8 @@ import SearchBar from '../componentes/ui/SearchBar.tsx';
 interface PokemonBase {
   name: string;
   url: string;
+  image?: string;    // El ? significa que al principio puede no estar
+  types?: string[];  // Un array de strings: ["fire", "flying"]
 }
 
 
@@ -33,37 +35,40 @@ const MainLayout = () => {
 const fetchPokemon = async (currentOffset: number) => {
   try {
     setLoading(true);
+    
+    // Paso A: Lista básica (nombres y URLs)
     const response = await fetch(
       `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${currentOffset}`
     );
     const data = await response.json();
 
-    // ❗ ¡Aca esta la magia! 
-    // Por cada Pokémon básico, creamos una promesa para traer sus detalles
+    // Paso B: Los 20 mensajeros (Promesas)
     const detailPromises = data.results.map(async (pokemon: PokemonBase) => {
       const res = await fetch(pokemon.url);
       const details = await res.json();
-
+      
       return {
         name: pokemon.name,
         url: pokemon.url,
+        // Extraemos la imagen oficial y los tipos
         image: details.sprites.other['official-artwork'].front_default,
-        types: details.types.map((t: any) => t.type.name) // Guardamos array de tipos: ['grass', 'poison']
-      }
+        types: details.types.map((t: any) => t.type.name) 
+      };
     });
 
-    // Esperamos a que las 20 promesas terminen
+    // Paso C: Esperar a que todos vuelvan
     const fullPokemonData = await Promise.all(detailPromises);
 
-    // 4. Guardamos en el estado con la protección de duplicados
+    // Paso D: Guardar sin duplicados
     setPokemonList(prevList => {
       const nuevosFiltrados = fullPokemonData.filter(
         (nuevo) => !prevList.some(existente => existente.name === nuevo.name)
       );
-    return [...prevList, ...nuevosFiltrados];
-});
+      return [...prevList, ...nuevosFiltrados];
+    });
+
   } catch (error) {
-    console.error("Error al traer los detalles de los henriqueciendo Pokémon:", error);
+    console.error("Error en la Pokedex:", error);
   } finally {
     setLoading(false);
   }
@@ -83,9 +88,13 @@ const handleLoadMore = () => {
 
   //Logica de filtrado Pokemons
   const filteredPokemon = pokemonList.filter((pokemon) => {
+    // Filtro 1: ¿Coincide el nombre?
     const matchesSearch = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
-    //Aquí la lógica: matchesSearch && matchesType
-    return matchesSearch;
+    
+    // Filtro 2: ¿Coincide el tipo? (Si es 'todos', pasa siempre)
+    const matchesType = selectedType === `todos` || (pokemon.types && pokemon.types?.includes(selectedType))
+    
+    return matchesSearch && matchesType;
 });
 
   return (
