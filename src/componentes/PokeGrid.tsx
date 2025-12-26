@@ -4,7 +4,8 @@ import PokeCard from "./PokeCard"
 // 1. Definimos el "molde" de lo que viene de la API
 interface PokemonBase {
   name: string;
-  url: string;
+  image?: string;
+  types?: string[];
 }
 
 // 2. Usamos ese molde en las Props del Grid
@@ -57,7 +58,8 @@ function PokeGrid({pokemons}: PokeGridProps) {
         <PokeCard 
           key={unPokemon.name} // Usamos el nombre como clave única
           name={unPokemon.name} 
-          url={unPokemon.url} 
+          image={unPokemon.image || ''} // Le pasamos la imagen que ya tenemos
+          types={unPokemon.types || []} // Le pasamos los tipos que ya tenemos 
         />
       ))}
       </div>

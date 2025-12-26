@@ -1,4 +1,10 @@
-import {useState, useEffect} from 'react'
+
+//El molde ahora incluye la imagen y los tipos que le manda el padre
+interface PokeCardProps {
+  name: string;
+  image: string;
+  types: string[];
+}
 //Objeto de Configuración (o Diccionario de Colores).
 const typeColors: Record<string, string> = {
   fire: '#F08030',
@@ -22,103 +28,35 @@ const typeColors: Record<string, string> = {
 };
 
 
-// 1. EL MOLDE (Interface): Define la estructura del detalle que nos da la PokeAPI
-interface PokemonDetails {
-  sprites: {
-    other: {
-      'official-artwork': {
-        front_default: string;
-      }
-    }
-  };
-  types: Array<{
-    type: {
-      name: string;
-    }
-  }>;
-}
-
-// ... aquí tu diccionario typeColors ...
-
-interface PokeCardProps {
-  name: string;
-  url: string;
-}
-
-function PokeCard({name, url}: PokeCardProps) {
-  //Estado para guardar detalles especificos del pokemon: name, imagen, tipos, habilidades, etc.)
-  const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails | null>(null);
-
-  //Efecto para traer los detalles del pokemon cuando el componente se monta
-  useEffect(() => {
-    async function getDetails() {
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        console.log("Datos de este pokemon:", data);
-        //Guardamos todo en el objeto detalles
-        setPokemonDetails(data);
-      } catch (error) {
-        console.error("Error al traer los detalles del Pokemon:", error);
-      }
-    }
-    getDetails();
-  }, [url]); //Dependencia en url para que se ejecute cuando cambie
-
-  //Mientras no tengamos detalles, mostramos un estado de carga Local
-  if(!pokemonDetails) {
-    return <div className="card-loader">Cargando datos de {name}...</div>
-  }
-
-  //extraer el tipo principal y buscarlo en nuestro diccionario.
-  const mainType = pokemonDetails.types[0].type.name;
-  //Buscamos el color. Si el tipo no está en nuestro mapa, usamos un gris por defecto.
-const themeColor = typeColors[mainType] || '#777';
-
+function PokeCard({name, image, types}: PokeCardProps) {
 
 
   return (
   <div 
-    className="poke-card" 
-    style={{ 
-      backgroundColor: themeColor + '33', // Añadimos '33' al final para darle transparencia (alfa)
-      border: `2px solid ${themeColor}`,
-      borderRadius: '15px',
-      padding: '20px',
-      textAlign: 'center',
-      margin: '10px'
-    }}
+    className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 p-4 flex flex-col items-center border border-gray-100"
   >
-    {/* El resto de tu contenido (img, h3, etc.) */}
+    {/* Imagen: Ya viene lista del padre */}
     <img 
-      src={pokemonDetails?.sprites?.other?.['official-artwork']?.front_default}
-      alt={name}
-      style={{ width: '120px',
-        display: 'block',
-        margin: '0 auto'
-       }} // Un poco de tamaño
+      src={image} 
+      alt={name} 
+      className="w-32 h-32 object-contain"
     />
     
-    <h3 style={{ color: themeColor }}>{name.toUpperCase()}</h3>
+    {/* Nombre */}
+      <h3 className="text-gray-800 font-bold text-lg capitalize mb-2">{name}</h3>
 
-    <div className="types">
-      {pokemonDetails.types?.map((item) => (
-        <span 
-          key={item.type.name} 
-          style={{
-            backgroundColor: typeColors[item.type.name],
-            color: 'white',
-            padding: '2px 8px',
-            borderRadius: '4px',
-            margin: '0 2px',
-            fontSize: '0.8rem'
-          }}
-        >
-          {item.type.name}
-        </span>
-      ))}
-    </div>
+    {/* Tipos: Un pequeño mapa para mostrar las burbujas de color */}
+      <div className="flex gap-2">
+        {types.map((type) => (
+          <span
+            key={type}
+            style={{ backgroundColor: typeColors[type] || '#777' }}
+            className="px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-wider"
+          >
+            {type}
+          </span>
+        ))}
+      </div>
   </div>
 );
 }
