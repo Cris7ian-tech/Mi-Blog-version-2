@@ -6,14 +6,16 @@ interface PokemonBase {
   name: string;
   image?: string;
   types?: string[];
+  
 }
 
 // 2. Usamos ese molde en las Props del Grid
 interface PokeGridProps {
   pokemons: PokemonBase[]; // Ya no usamos any, sino un array de PokemonBase
+  isDark?: boolean;
 }
 
-function PokeGrid({pokemons}: PokeGridProps) {
+function PokeGrid({pokemons, isDark = false}: PokeGridProps) {
   // Aca manejamos la lógica de "No hay resultados"
   if(pokemons.length === 0) {
     return (
@@ -60,6 +62,7 @@ function PokeGrid({pokemons}: PokeGridProps) {
           name={unPokemon.name} 
           image={unPokemon.image || ''} // Le pasamos la imagen que ya tenemos
           types={unPokemon.types || []} // Le pasamos los tipos que ya tenemos 
+          isDark={isDark}
         />
       ))}
       </div>

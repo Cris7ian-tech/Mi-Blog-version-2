@@ -4,6 +4,7 @@ interface PokeCardProps {
   name: string;
   image: string;
   types: string[];
+  isDark: boolean; // <--THEME: instrucción
 }
 //Objeto de Configuración (o Diccionario de Colores).
 const typeColors: Record<string, string> = {
@@ -28,37 +29,39 @@ const typeColors: Record<string, string> = {
 };
 
 
-function PokeCard({name, image, types}: PokeCardProps) {
+function PokeCard({name, image, types, isDark}: PokeCardProps) {
 
-
-  return (
-  <div 
-    className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 p-4 flex flex-col items-center border border-gray-100"
-  >
-    {/* Imagen: Ya viene lista del padre */}
-    <img 
-      src={image} 
-      alt={name} 
-      className="w-32 h-32 object-contain"
-    />
     
-    {/* Nombre */}
-      <h3 className="text-gray-800 font-bold text-lg capitalize mb-2">{name}</h3>
+  return (
+    <div className={`
+      /* Lógica de fondo: Si isDark es true, usa gris oscuro. Si no, usa blanco */
+      ${isDark ? 'bg-[#2a2a2a] border-gray-800' : 'bg-white border-gray-200'}
+      rounded-xl shadow-lg transition-all duration-300 p-4 flex flex-col items-center border
+      `}>
+      
+      <div className={`${isDark ? 'bg-white/5' : 'bg-gray-100'} rounded-full p-4 mb-4`}>
+        <img src={image} alt={name} className="w-28 h-28 object-contain" />
+      </div>
 
-    {/* Tipos: Un pequeño mapa para mostrar las burbujas de color */}
+      {/* Lógica de texto: Blanco para oscuro, gris oscuro para claro */}
+      <h3 className={`font-bold text-lg capitalize mb-3 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+        {name}
+      </h3>
+
       <div className="flex gap-2">
         {types.map((type) => (
           <span
             key={type}
             style={{ backgroundColor: typeColors[type] || '#777' }}
-            className="px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-wider"
+            className="px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase"
           >
             {type}
           </span>
         ))}
       </div>
-  </div>
-);
+    </div>
+  );
 }
+
 
 export default PokeCard

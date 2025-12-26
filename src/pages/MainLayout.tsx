@@ -13,6 +13,7 @@ interface PokemonBase {
   url: string;
   image?: string;    // El ? significa que al principio puede no estar
   types?: string[];  // Un array de strings: ["fire", "flying"]
+  isDark?: boolean; // THEME: para el modo oscuro
 }
 
 
@@ -24,6 +25,8 @@ const MainLayout = () => {
   // paso 3 - Pokegrid crea 20 PokeCard
   const [pokemonList, setPokemonList] = useState<PokemonBase[]>([]);
   const [loading, setLoading] = useState(true);
+  // THEME: El Interruptor
+  const [isDarkMode, setIsDarkMode] = useState(true);
   // nuevo estado: boton cargar mas
   const [offset, setOffset] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -149,8 +152,24 @@ const handleLoadMore = () => {
         </div>
 
           {/* POKEDEX */}
-            <h1 className="text-2xl text-white font-bold py-4 text-center">MPokedex</h1>
+          <div className="flex items-center justify-center gap-4 py-4">
+            <h1 className="text-2xl text-white font-bold">MPokedex</h1>
             
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`px-4 py-1 rounded-full font-bold text-sm transition-all duration-300 border-2 ${
+                isDarkMode 
+                  ? 'bg-[#eb7d69] border-[#eb7d69] text-white' 
+                  : 'bg-white border-gray-300 text-gray-800'
+              }`}
+            >
+              {isDarkMode ? "☀️ Modo Claro" : "🌙 Modo Oscuro"}
+            </button>
+          </div>
+            
+  
+              
+            {/* BARRA DE BÚSQUEDA */}
             <SearchBar onSearch={(value) => setSearchTerm(value)} />
 
             {/* FILTRO POR TIPO DE POKEMON */}
@@ -160,7 +179,7 @@ const handleLoadMore = () => {
           />
             
             {/* Mostramos el Grid siempre, esté cargando o no */}
-            <PokeGrid pokemons={filteredPokemon} />
+            <PokeGrid pokemons={filteredPokemon} isDark={isDarkMode || false} />
 
             {/* 4. BOTÓN CARGAR MÁS (Fuera del Grid) */}
             {!searchTerm && (
