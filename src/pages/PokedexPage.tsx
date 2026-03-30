@@ -1,4 +1,5 @@
 // pages/PokedexPage.tsx
+import PokeSkeleton from '../componentes/ui/PokeSkeleton';
 import { useState, useEffect } from 'react';
 import PokeGrid from '../componentes/PokeGrid';
 import SearchBar from '../componentes/ui/SearchBar';
@@ -54,16 +55,16 @@ const PokedexPage = ({ isDark }: { isDark: boolean }) => {
     }
   }; // <--- AQUÍ TERMINA fetchPokemon
 
-  // --- 2. USEEFFECT (Al mismo nivel que fetchPokemon) ---
+  // --- 2. UseEffect (Al mismo nivel que fetchPokemon) ---
   useEffect(() => {
     fetchPokemon(0);
   }, []);
 
   // --- 3. LÓGICA DE FILTRADO ---
   const filteredPokemon = pokemonList.filter((pokemon) => {
-    const matchesSearch = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = selectedType === "todos" || (pokemon.types && pokemon.types.includes(selectedType));
-    return matchesSearch && matchesType;
+  const matchesSearch = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const matchesType = selectedType === "todos" || (pokemon.types && pokemon.types.includes(selectedType));
+  return matchesSearch && matchesType;
   });
 
   return (
@@ -72,7 +73,7 @@ const PokedexPage = ({ isDark }: { isDark: boolean }) => {
       {/* 1. HERO SECTION */}
       <section className='flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 mb-24 min-h-[400px]'>
         <div className='flex-1 max-w-xl text-center md:text-left space-y-6'>
-          <h1 className='text-5xl md:text-7xl font-extrabold text-[#f2f2f2] tracking-tighter'>
+          <h1 className='text-5xl md:text-7xl font-extrabold text-[#f2f2f2] tracking-normal'>
             Laboratorio <br /> 
             <span className="text-[#DE8676]">Pokedex</span>
           </h1>
@@ -103,30 +104,43 @@ const PokedexPage = ({ isDark }: { isDark: boolean }) => {
         </div>
       </div>
         
-      {/* 3. GRID DE POKEMON */}  
+      {/* 3. GRID DE POKEMON + LÓGICA DE SKELETON */}  
+      {/* Si estamos cargando y NO hay pokemones aún (primera carga), mostramos Skeletons */}
+      {loading && pokemonList.length === 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          {[...Array(10)].map((_, i) => <PokeSkeleton key={i} />)}
+        </div>
+      ) : (
+        /* Si ya hay datos, mostramos el Grid real */
         <PokeGrid 
           pokemons={filteredPokemon} 
           isDark={true} 
         />
+      )}
+      {/* Skeletons adicionales al final mientras carga más (opcional pero pro) */}
+      {loading && pokemonList.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-8">
+          {[...Array(5)].map((_, i) => <PokeSkeleton key={i} />)}
+        </div>
+      )}
         
         {/* 4. BOTÓN CARGAR MÁS */}
-        {!searchTerm && (
-          <div className="flex justify-center py-16">
-            <button 
-              onClick={() => {
-                  const nextOffset = offset + 20;
-                  setOffset(nextOffset);
-                  fetchPokemon(nextOffset);
-              }}
-              disabled={loading}
-              className="px-10 py-4 bg-[#DE8676] text-[#1A1B22] rounded-full font-bold text-lg hover:scale-105 hover:bg-[#DE8676]/90 transition-all disabled:bg-[#373943]disabled:text-[#A1A1A1] shadow-lg shadow-[#DE8676]/20"
-            >
-              {loading ? "Buscando..." : "Cargar más Pokémon"}
-            </button>
-          </div>
-        )}
-      </div>
-
+        {/* 4. BOTÓN CARGAR MÁS (Limpio) */}
+      {!searchTerm && !loading && (
+        <div className="flex justify-center py-16">
+          <button 
+            onClick={() => {
+                const nextOffset = offset + 20;
+                setOffset(nextOffset);
+                fetchPokemon(nextOffset);
+            }}
+            className="px-10 py-4 bg-[#DE8676] text-[#1A1B22] rounded-full font-bold text-lg hover:scale-105 hover:bg-[#DE8676]/90 transition-all shadow-lg shadow-[#DE8676]/20"
+          >
+            Cargar más Pokémon
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

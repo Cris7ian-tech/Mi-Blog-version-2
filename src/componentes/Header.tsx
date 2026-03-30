@@ -43,7 +43,7 @@ const Header = () => {
 
           {/* BOTÓN HAMBURGUESA: Icono en Gris Claro/Blanco */}
           <button 
-            className="md:hidden flex flex-col gap-1.5 z-[110] p-2" 
+            className="md:hidden flex flex-col gap-1.5 z-110 p-2" 
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Menu"
           >

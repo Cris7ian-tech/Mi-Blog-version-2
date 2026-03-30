@@ -1,59 +1,67 @@
+// 1. Mantenemos tu diccionario de colores (es perfecto)
+const typeColors: Record<string, string> = {
+  fire: '#F08030', water: '#6890F0', grass: '#78C850', electric: '#F8D030',
+  psychic: '#F85888', ice: '#98D8D8', dragon: '#7038F8', dark: '#705848',
+  fairy: '#EE99AC', normal: '#A8A878', fighting: '#C03028', flying: '#A890F0',
+  poison: '#A040A0', ground: '#E0C068', rock: '#B8A038', bug: '#A8B020',
+  ghost: '#705898', steel: '#B8B8D0',
+};
 
-//El molde ahora incluye la imagen y los tipos que le manda el padre
 interface PokeCardProps {
   name: string;
   image: string;
   types: string[];
-  isDark: boolean; // <--THEME: instrucción
+  isDark: boolean;
 }
-//Objeto de Configuración (o Diccionario de Colores).
-const typeColors: Record<string, string> = {
-  fire: '#F08030',
-  water: '#6890F0',
-  grass: '#78C850',
-  electric: '#F8D030',
-  psychic: '#F85888',
-  ice: '#98D8D8',
-  dragon: '#7038F8',
-  dark: '#705848',
-  fairy: '#EE99AC',
-  normal: '#A8A878',
-  fighting: '#C03028',
-  flying: '#A890F0',
-  poison: '#A040A0',
-  ground: '#E0C068',
-  rock: '#B8A038',
-  bug: '#A8B020',
-  ghost: '#705898',
-  steel: '#B8B8D0',
-};
 
-
-function PokeCard({name, image, types, isDark}: PokeCardProps) {
-
-    
+function PokeCard({ name, image, types, isDark }: PokeCardProps) {
   return (
     <div className={`
-      /* Lógica de fondo: Si isDark es true, usa gris oscuro. Si no, usa blanco */
-      ${isDark ? 'bg-[#2a2a2a] border-gray-800' : 'bg-white border-gray-200'}
-      rounded-xl shadow-lg transition-all duration-300 p-4 flex flex-col items-center border
-      `}>
+      /* Cambiamos el bg-[#2a2a2a] por nuestro #2D2F39 y el borde por #373943 */
+      group relative flex flex-col items-center p-6 rounded-2xl border transition-all duration-500
+      ${isDark 
+        ? 'bg-[#20242b] border-[#373943] hover:border-[#DE8676]/50 shadow-2xl' 
+        : 'bg-white border-gray-200 shadow-md'}
+      hover:-translate-y-2 hover:shadow-[#DE8676]/10
+    `}>
       
-      <div className={`${isDark ? 'bg-white/5' : 'bg-gray-100'} rounded-full p-4 mb-4`}>
-        <img src={image} alt={name} className="w-28 h-28 object-contain" />
+      {/* Contenedor de la Imagen con un círculo de fondo muy sutil */}
+      <div className={`
+        relative rounded-full p-6 mb-4 transition-transform duration-500 group-hover:scale-110
+        ${isDark ? 'bg-[#1A1B22]' : 'bg-gray-100'}
+      `}>
+        {/* Un pequeño resplandor solo al pasar el mouse */}
+        <div className="absolute inset-0 bg-[#DE8676]/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        
+        <img 
+          src={image} 
+          alt={name} 
+          className="w-24 h-24 md:w-28 md:h-28 object-contain relative z-10 drop-shadow-md" 
+        />
       </div>
 
-      {/* Lógica de texto: Blanco para oscuro, gris oscuro para claro */}
-      <h3 className={`font-bold text-lg capitalize mb-3 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+      {/* Nombre: Usamos tracking-tighter para que se vea más "pro" */}
+      <h3 className={`
+        font-normal text-xl capitalize mb-4 tracking-tighter transition-colors
+        ${isDark ? 'text-white group-hover:text-[#DE8676]' : 'text-gray-800'}
+      `}>
         {name}
       </h3>
 
+      {/* Tipos: Etiquetas más minimalistas */}
       <div className="flex gap-2">
         {types.map((type) => (
           <span
             key={type}
-            style={{ backgroundColor: typeColors[type] || '#777' }}
-            className="px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase"
+            style={{ 
+              backgroundColor: isDark ? 'transparent' : typeColors[type],
+              borderColor: typeColors[type],
+              color: isDark ? typeColors[type] : 'white'
+            }}
+            className={`
+              px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border
+              ${isDark ? 'bg-opacity-10' : ''}
+            `}
           >
             {type}
           </span>
@@ -63,5 +71,4 @@ function PokeCard({name, image, types, isDark}: PokeCardProps) {
   );
 }
 
-
-export default PokeCard
+export default PokeCard;

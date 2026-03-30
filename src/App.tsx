@@ -8,6 +8,7 @@ import Header from "./componentes/Header.tsx";
 import MainLayout from "./pages/MainLayout.tsx";
 
 import PokedexPage from "./pages/PokedexPage.tsx";
+import PokemonDetail from "./pages/PokemonDetail.tsx";
 import HooksPage from "./pages/HooksPage.tsx";
 import FacturacionPage from "./pages/FacturacionPage.tsx";
 
@@ -28,6 +29,7 @@ function App() {
           <Routes>
             <Route path="/" element={<MainLayout />} />
             <Route path="/pokedex" element={<PokedexPage isDark={true}/>} />
+            <Route path="/pokedex/:name" element={<PokemonDetail />} />
             <Route path="/hooks" element={<HooksPage isDark={true}/>} />
             <Route path="/facturacion" element={<FacturacionPage />} />
             <Route path="/blog" element={<Blog />} />

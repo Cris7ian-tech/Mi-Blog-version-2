@@ -1,90 +1,82 @@
 import { useState, useEffect, useRef } from 'react';
 
-
 interface SearchBarProps {
   onSearch: (value: string) => void;
 }
 
 function SearchBar({ onSearch }: SearchBarProps) {
   const [inputValue, setInputValue] = useState("");
-  
-  // useRef: Creamos el "cable"(inputRef). Empezamos en null porque el input aún no existe
   const inputRef = useRef<HTMLInputElement>(null);
-  // useRef: Lógica del Foco Automático
+
+  // Foco automático al montar
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus(); // Le damos foco al input cuando el componente se monta
-    }
+    inputRef.current?.focus();
   }, []);
 
-  // Agregamos Lógica de Debounce
+  // Lógica de Debounce (400ms)
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       onSearch(inputValue);
-    }, 500); // Espera 400ms después de que el usuario deja de escribir
-    return () => clearTimeout(timeoutId); // Limpia el timeout si el valor cambia antes de los 400ms
+    }, 400);
+    return () => clearTimeout(timeoutId);
   }, [inputValue, onSearch]);
+
   const handleClear = () => {
     setInputValue("");
+    inputRef.current?.focus(); // Devolvemos el foco al limpiar
   };
 
   return (
-    <div className="search-container" 
-    style={{ 
-      position: 'relative',
-      width: `300px`,
-      margin: '20px auto', 
-      textAlign: 'center' }}
-      >
+    <div className="relative w-full max-w-md mx-auto my-8 px-4">
       
-      {/* Icono de Lupa  */}
-      <span style={{ position: 'absolute', left: '15px', top: '10px' }}>🔍</span>
+      {/* Icono de Lupa: Color salmón sutil */}
+      <span className="absolute left-8 top-1/2 -translate-y-1/2 text-lg opacity-60">
+        🔍
+      </span>
+
       <input 
-      type="text"
-      ref={inputRef} // useRef: Asignamos el ref al input para el foco automático
-      value= {inputValue}
-      placeholder="Busca tu Pokémon..."
-      onChange={e => setInputValue(e.target.value)} // Actualizamos el estado con el valor ingresado por el usuarioe}
-      style={{
-        padding: '10px 40px',
-        borderRadius: '25px',
-        border: '2px solid #eb7d69',
-        outline: 'none',
-        width: `300px`,
-        fontSize: `1rem`,
-        color: `#fff`
-      }}
+        type="text"
+        ref={inputRef}
+        value={inputValue}
+        placeholder="Busca tu Pokémon..."
+        onChange={(e) => setInputValue(e.target.value)}
+        className="
+          w-full 
+          bg-[#2D2F39] 
+          text-white 
+          placeholder:text-[#A1A1A1]
+          pl-12 pr-12 py-4 
+          rounded-full 
+          border-2 border-[#373943] 
+          outline-none 
+          transition-all 
+          duration-300
+          focus:border-[#DE8676] 
+          focus:shadow-[0_0_20px_rgba(222,134,118,0.15)]
+        "
       />
 
-      {/*  Botón "X" para borrar */}
+      {/* Botón "X" para borrar: Estilo minimalista */}
       {inputValue && (
         <button
           onClick={handleClear}
-          style={{
-            position: 'absolute',
-            right: '15px',
-            top: '11px',
-            border: 'none',
-            color: '#eb7d69',
-            background: '#ddd',
-            borderRadius: '50%',
-            width: '25px',
-            height: '25px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '12px',
-            fontWeight: 'bold'
-          }}
+          className="
+            absolute right-8 top-1/2 -translate-y-1/2 
+            w-6 h-6 
+            bg-[#1A1B22] 
+            text-[#DE8676] 
+            rounded-full 
+            flex items-center justify-center 
+            text-[10px] font-black 
+            hover:bg-[#DE8676] hover:text-[#1A1B22]
+            transition-colors
+          "
         >
           X
         </button>
       )}
     </div>
-  )
+  );
 }
 
-
-
-export default SearchBar
+export default SearchBar;
