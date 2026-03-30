@@ -1,31 +1,57 @@
-
 const Footer = () => {
   return (
+    <footer className="w-full bg-[#1A1B22] border-t border-[#373943] py-12">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        {/* Contenido Superior: Enlaces y Marca */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-10">
+          
+          {/* Lado Izquierdo: Tu marca o logo */}
+          <div className="text-center md:text-left">
+            <h3 className="text-white font-bold text-xl tracking-tight">
+              Cristian<span className="text-[#DE8676]">.dev</span>
+            </h3>
+            <p className="text-[#A1A1A1] text-sm mt-1">Construyendo interfaces desde Argentina.</p>
+          </div>
 
-    <div>
-      
-      <footer className="p-4 bg-neutral-900 shadow-red-30080 text-gray-300 text-center flex flex-col sm:flex-row items-center justify-center gap-2 whitespace-nowrap">
-      <p className="flex items-center gap-2 text-sm sm:text-base">
-        © {new Date().getFullYear()} MyBlog — Creado con{" "}
-          <span className="flex items-center gap-1 text-cyan-300 font-semibold">
-            <img
-              src="/src/assets/react.svg"
-              alt="React logo"
-              className="w-5 h-5 inline-block"/>
+          {/* Lado Derecho: Redes Sociales */}
+          <div className="flex gap-6">
+            <a href="https://github.com" target="_blank" rel="noreferrer" className="text-[#A1A1A1] hover:text-[#DE8676] transition-colors">
+              <span className="text-sm font-medium">GitHub</span>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="text-[#A1A1A1] hover:text-[#DE8676] transition-colors">
+              <span className="text-sm font-medium">LinkedIn</span>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-[#A1A1A1] hover:text-[#DE8676] transition-colors">
+              <span className="text-sm font-medium">Instagram</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Línea Divisoria Interna */}
+        <div className="h-px w-full bg-[#373943] mb-8 opacity-50"></div>
+
+        {/* Contenido Inferior: Créditos Tecnológicos */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[#A1A1A1] text-xs sm:text-sm">
+          <p>© {new Date().getFullYear()} Todos los derechos reservados.</p>
+          
+          <div className="flex items-center gap-2">
+            <span>Hecho con</span>
+            <span className="flex items-center gap-1.5 text-[#DE8676]">
+              <img src="/src/assets/react.svg" alt="React" className="w-4 h-4" />
               React
-          </span>{" "}
-              y{" "}
-          <span className="flex items-center gap-1 text-sky-400 font-semibold">
-            <img
-              src="/src/assets/tailwind.svg"
-              alt="Tailwind CSS logo"
-              className="w-5 h-5 inline-block"/>
-              Tailwind CSS
-          </span>
-      </p>
-    </footer>
-    </div>
-  )
-}
+            </span>
+            <span>+</span>
+            <span className="flex items-center gap-1.5 text-[#DE8676]">
+              <img src="/src/assets/tailwind.svg" alt="Tailwind" className="w-4 h-4" />
+              Tailwind
+            </span>
+          </div>
+        </div>
 
-export default Footer
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

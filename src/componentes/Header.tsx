@@ -1,134 +1,90 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Bloquear scroll cuando el menú está abierto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen]);
+
   return (
-
-    <>
-      <header className="px-22 bg-neutral-800 shadow-sm shadow-red-300/20">
-      
-        <nav className="flex flex-col md:flex-row justify-between py-4">
+    <header className="sticky top-0 z-50 w-full bg-[#1A1B22]/80 backdrop-blur-md border-b border-[#373943]">
+      <div className="max-w-7xl mx-auto px-6">
+        <nav className="flex justify-between items-center h-20">
           
-          <a href="/" className="hidden md:block text-2xl font-bold text-white mb-4 md:mb-0">
-          MyBlog
-          </a>
+          {/* LOGO: Blanco con acento Salmón */}
+          <NavLink to="/" className="text-2xl font-bold text-white tracking-tighter">
+            Cristian<span className="text-[#DE8676]">.dev</span>
+          </NavLink>
 
-          {/** MOBILE MENU **/}
-          <section className="flex md:hidden">
-            {/* HAMBURGUESA LATE*/}
-            <div className="space-y-2"
-            onClick={() => setIsOpen(!isOpen)}>
-              <span className="block h-0.5 w-8 animate-pulse bg-gray-200"></span>
-              <span className="block h-0.5 w-8 animate-pulse bg-gray-200"></span>
-              <span className="block h-0.5 w-8 animate-pulse bg-gray-200"></span>
-            </div>
-
-            <div className={isOpen ? "showMenuNav" : "hideMenuNav"}>
-              <div className="absolute top-0 right-0 px-8 py-8"
-                onClick={() => setIsOpen(false)}
+          {/* NAVEGACIÓN DESKTOP: Gris suave con hover Salmón */}
+          <ul className="hidden md:flex items-center space-x-10">
+            {["Inicio", "Blog", "Contacto"].map((item) => (
+              <li key={item}>
+                <NavLink
+                  to={item === "Inicio" ? "/" : `/${item.toLowerCase()}`}
+                  className={({ isActive }) =>
+                    `text-sm font-medium tracking-wide transition-all duration-300 hover:text-[#eec3bb] ${
+                      isActive ? "text-[#DE8676]" : "text-[#A1A1A1]"
+                    }`
+                  }
                 >
-                <svg className="h-8 w-8 text-gray-200"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      >
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </div>
-          {/* NAVEGACION MOBILE OPEN */}
-              <ul className="flex flex-col items-center justify-between min-h-[250px]">
-                <li className="border-b border-gray-600 my-8 uppercase">
-                  <NavLink
-                  to="/"
-                  className={({isActive}) => isActive ? "text-[#eb7d69]" : "text-white"}> 
-                  
-                  Inicio
-                  </NavLink>
-                </li>
-
-
-                <li className="border-b border-gray-600 my-8 uppercase">
-                  <NavLink
-                  to="/blog"
-                  className={({isActive}) => isActive ? "text-[#eb7d69]" : "text-white"}> 
-
-                  Blog
-                  </NavLink>
-                </li>
-                
-                <li className="border-b border-gray-600 my-8 uppercase">
-                  <NavLink
-                  to="/contacto"
-                  className={({isActive}) => isActive ? "text-[#eb7d69]" : "text-white"}> 
-                  
-                  Contacto
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-
-          </section>
-
-          {/* NAVEGACION DESKTOP */}
-          <ul className="hidden text-lg space-x-8 md:flex">
-            <li>
-                <NavLink
-                to="/"
-                  className={({isActive}) => isActive ? "text-[#eb7d69]" : "text-white"}>
-                    Inicio
-                  </NavLink>
-            </li>
-
-            <li>
-                <NavLink
-                to="/blog"
-                  className={({isActive}) => isActive ? "text-[#eb7d69]" : "text-white"}>
-                    Blog
-                  </NavLink>
-            </li>
-
-            <li>
-                <NavLink
-                to="/contacto"
-                  className={({isActive}) => isActive ? "text-[#eb7d69]" : "text-white"}>
-                    Contacto
-                  </NavLink>
-            </li>
+                  {item}
+                </NavLink>
+              </li>
+            ))}
           </ul>
 
+          {/* BOTÓN HAMBURGUESA: Icono en Gris Claro/Blanco */}
+          <button 
+            className="md:hidden flex flex-col gap-1.5 z-[110] p-2" 
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Menu"
+          >
+            {/* Las barritas ahora cambian de color y forma dinámicamente */}
+            <span className={`block h-0.5 w-6 transition-all duration-300 ${isOpen ? "rotate-45 translate-y-2 bg-[#DE8676]" : "bg-gray-200"}`}></span>
+            <span className={`block h-0.5 w-6 transition-all duration-300 ${isOpen ? "opacity-0" : "bg-gray-200"}`}></span>
+            <span className={`block h-0.5 w-6 transition-all duration-300 ${isOpen ? "-rotate-45 -translate-y-2 bg-[#DE8676]" : "bg-gray-200"}`}></span>
+          </button>
         </nav>
-        <style>
-          {`
-      .hideMenuNav {
-        display: none;
-      }
-      .showMenuNav {
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100vh;
-        top: 0;
-        left: 0;
-        background: rgba(17,17,17,0.8);
-        backdrop-filter: blur(10px);
-        z-index: 10;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
-      }
-    `}
-        </style>
+      </div>
+
+      {/* MENÚ MOBILE: Fondo Negro Profundo y texto Salmón */}
+      <div 
+        className={`fixed inset-0 w-screen h-screen bg-[#1A1B22] z-[100] flex flex-col items-center justify-center transition-all duration-500 ease-in-out ${
+          isOpen ? "translate-y-0 opacity-100 visible" : "-translate-y-full opacity-0 invisible"
+        }`}
+      >
+        <ul className="text-center space-y-10">
+          {["Inicio", "Blog", "Contacto"].map((item) => (
+            <li key={item} onClick={() => setIsOpen(false)}>
+              <NavLink
+                to={item === "Inicio" ? "/" : `/${item.toLowerCase()}`}
+                className={({ isActive }) => 
+                  `text-4xl font-bold tracking-tight transition-colors ${
+                    isActive ? "text-[#DE8676]" : "text-white hover:text-[#DE8676]"
+                  }`
+                }
+              >
+                {item}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+        
+        {/* Detalle decorativo opcional al final del menú mobile */}
+        <div className="absolute bottom-12 text-[#373943] text-sm tracking-widest uppercase">
+          Cristian Portfolio 2026
+        </div>
+      </div>
     </header>
+  );
+};
 
-    </>
-  )
-}
-
-export default Header
+export default Header;
