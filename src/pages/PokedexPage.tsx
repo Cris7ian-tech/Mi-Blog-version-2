@@ -67,39 +67,66 @@ const PokedexPage = ({ isDark }: { isDark: boolean }) => {
   });
 
   return (
-    <div className="p-4 sm:p-8">
-      <h1 className={`text-3xl font-bold text-center mb-8 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-        Mi Pokedex
-      </h1>
-      
-      <SearchBar onSearch={setSearchTerm} />
-      
-      <TypeFilters 
-        selectedType={selectedType} 
-        onTypeChange={setSelectedType} 
-      />
-      
-      <PokeGrid 
-        pokemons={filteredPokemon} 
-        isDark={isDark} 
-      />
-      
-      {!searchTerm && (
-        <div className="flex justify-center py-10">
-          <button 
-            onClick={() => {
-                const nextOffset = offset + 20;
-                setOffset(nextOffset);
-                fetchPokemon(nextOffset);
-            }}
-            disabled={loading}
-            className="px-8 py-3 bg-[#eb7d69] text-white rounded-full font-bold hover:scale-105 transition-all disabled:bg-gray-400"
-          >
-            {loading ? "Buscando..." : "Cargar más Pokémon"}
-          </button>
+    // Contenedor Maestro con el espacio del Home
+    <div className='max-w-7xl mx-auto px-6 py-12'>
+      {/* 1. HERO SECTION */}
+      <section className='flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 mb-24 min-h-[400px]'>
+        <div className='flex-1 max-w-xl text-center md:text-left space-y-6'>
+          <h1 className='text-5xl md:text-7xl font-extrabold text-[#f2f2f2] tracking-tighter'>
+            Laboratorio <br /> 
+            <span className="text-[#DE8676]">Pokedex</span>
+          </h1>
+          <p className='text-[#A1A1A1] text-lg leading-relaxed mx-auto md:mx-0'>Explorando la PokéAPI con una interfaz limpia y moderna. 
+            Filtrá por tipo o buscá tu favorito.</p>
         </div>
-      )}
-    </div>
+
+        {/* Imagen del Hero con el "Glow" salmón */}
+        <div className='flex-none md:flex-1 flex justify-center relative'>
+          {/* El resplandor de fondo */}
+          <div className='absolute inset-0 bg-[#DE8676]/10 blur-[100px] rounded-full scale-80'></div>
+          <img 
+            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png"
+            alt="Mewtwo Hero"
+            className='w-64 md:w-100 relative z-10 drop-shadow-[0_0_30px_rgba(222,134,118,0.3)] animate-pulse'
+            />
+        </div>
+      </section>
+
+      {/* 2. CONTROLES (Buscador y Filtros) */}
+      <div className='bg-[#2D2F39]/50 p-8 rounded-xl border border-[#373943] mb-16 shadow-2xl backdrop-blur-sm'>
+        <div className="flex flex-col gap-6">        
+          <SearchBar onSearch={setSearchTerm} />        
+          <TypeFilters 
+            selectedType={selectedType} 
+            onTypeChange={setSelectedType} 
+          />   
+        </div>
+      </div>
+        
+      {/* 3. GRID DE POKEMON */}  
+        <PokeGrid 
+          pokemons={filteredPokemon} 
+          isDark={true} 
+        />
+        
+        {/* 4. BOTÓN CARGAR MÁS */}
+        {!searchTerm && (
+          <div className="flex justify-center py-16">
+            <button 
+              onClick={() => {
+                  const nextOffset = offset + 20;
+                  setOffset(nextOffset);
+                  fetchPokemon(nextOffset);
+              }}
+              disabled={loading}
+              className="px-10 py-4 bg-[#DE8676] text-[#1A1B22] rounded-full font-bold text-lg hover:scale-105 hover:bg-[#DE8676]/90 transition-all disabled:bg-[#373943]disabled:text-[#A1A1A1] shadow-lg shadow-[#DE8676]/20"
+            >
+              {loading ? "Buscando..." : "Cargar más Pokémon"}
+            </button>
+          </div>
+        )}
+      </div>
+
   );
 };
 
