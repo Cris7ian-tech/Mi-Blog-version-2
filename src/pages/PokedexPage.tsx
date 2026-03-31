@@ -93,53 +93,51 @@ const PokedexPage = ({ isDark }: { isDark: boolean }) => {
         </div>
       </section>
 
-      {/* 2. CONTROLES (Buscador y Filtros) */}
-      <div className='bg-[#2D2F39]/50 p-8 rounded-xl border border-[#373943] mb-16 shadow-2xl backdrop-blur-sm'>
-        <div className="flex flex-col gap-6">        
-          <SearchBar onSearch={setSearchTerm} />        
-          <TypeFilters 
-            selectedType={selectedType} 
-            onTypeChange={setSelectedType} 
-          />   
+      {/* 2. SECCIÓN EXPLORACIÓN: Fondo Gris Azulado (#2D2F39) */}
+      <section className="w-full bg-[#2D2F39] py-16 min-h-screen border-t border-[#373943]/30">
+        <div className="max-w-7xl mx-auto px-6">
+          
+          {/* Buscador y Filtros integrados al fondo */}
+          <div className="mb-16 space-y-10">
+            <SearchBar onSearch={setSearchTerm} />
+            <TypeFilters selectedType={selectedType} onTypeChange={setSelectedType} />
+          </div>
+
+          {/* Grid de Pokémon o Skeletons */}
+          {loading && pokemonList.length === 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+              {[...Array(10)].map((_, i) => <PokeSkeleton key={i} />)}
+            </div>
+          ) : (
+            <div className="mt-12">
+              <PokeGrid pokemons={filteredPokemon} />
+            </div>
+          )}
+
+          {/* Carga más suave */}
+          {loading && pokemonList.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mt-8">
+              {[...Array(5)].map((_, i) => <PokeSkeleton key={i} />)}
+            </div>
+          )}
+
+          {/* Botón Cargar Más */}
+          {!searchTerm && !loading && (
+            <div className="flex justify-center py-20">
+              <button 
+                onClick={() => {
+                    const nextOffset = offset + 20;
+                    setOffset(nextOffset);
+                    fetchPokemon(nextOffset);
+                }}
+                className="px-10 py-4 bg-[#DE8676] text-[#1A1B22] rounded-full font-black text-xs uppercase tracking-widest hover:scale-105 hover:bg-[#DE8676]/90 transition-all shadow-lg shadow-[#DE8676]/20"
+              >
+                Cargar más unidades
+              </button>
+            </div>
+          )}
         </div>
-      </div>
-        
-      {/* 3. GRID DE POKEMON + LÓGICA DE SKELETON */}  
-      {/* Si estamos cargando y NO hay pokemones aún (primera carga), mostramos Skeletons */}
-      {loading && pokemonList.length === 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {[...Array(10)].map((_, i) => <PokeSkeleton key={i} />)}
-        </div>
-      ) : (
-        /* Si ya hay datos, mostramos el Grid real */
-        <PokeGrid 
-          pokemons={filteredPokemon} 
-          isDark={true} 
-        />
-      )}
-      {/* Skeletons adicionales al final mientras carga más (opcional pero pro) */}
-      {loading && pokemonList.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-8">
-          {[...Array(5)].map((_, i) => <PokeSkeleton key={i} />)}
-        </div>
-      )}
-        
-        {/* 4. BOTÓN CARGAR MÁS */}
-        {/* 4. BOTÓN CARGAR MÁS (Limpio) */}
-      {!searchTerm && !loading && (
-        <div className="flex justify-center py-16">
-          <button 
-            onClick={() => {
-                const nextOffset = offset + 20;
-                setOffset(nextOffset);
-                fetchPokemon(nextOffset);
-            }}
-            className="px-10 py-4 bg-[#DE8676] text-[#1A1B22] rounded-full font-bold text-lg hover:scale-105 hover:bg-[#DE8676]/90 transition-all shadow-lg shadow-[#DE8676]/20"
-          >
-            Cargar más Pokémon
-          </button>
-        </div>
-      )}
+      </section>
     </div>
   );
 };

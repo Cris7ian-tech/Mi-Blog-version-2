@@ -47,7 +47,7 @@ function SearchBar({ onSearch }: SearchBarProps) {
           placeholder:text-[#A1A1A1]
           pl-12 pr-12 py-4 
           rounded-full 
-          border-2 border-[#373943] 
+          border border-[#A0A0A0] 
           outline-none 
           transition-all 
           duration-300

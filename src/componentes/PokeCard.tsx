@@ -17,13 +17,12 @@ interface PokeCardProps {
 function PokeCard({ name, image, types, isDark }: PokeCardProps) {
   return (
     <div className={`
-      /* Cambiamos el bg-[#2a2a2a] por nuestro #2D2F39 y el borde por #373943 */
-      group relative flex flex-col items-center p-6 rounded-2xl border transition-all duration-500
+      group relative flex flex-col items-center p-6 rounded-3xl border transition-all duration-500
       ${isDark 
-        ? 'bg-[#20242b] border-[#373943] hover:border-[#DE8676]/50 shadow-2xl' 
+        ? 'bg-[#1A1B22] border-[#373943] hover:border-[#DE8676]/50 shadow-2xl' 
         : 'bg-white border-gray-200 shadow-md'}
       hover:-translate-y-2 hover:shadow-[#DE8676]/10
-    `}>
+      `}>
       
       {/* Contenedor de la Imagen con un círculo de fondo muy sutil */}
       <div className={`

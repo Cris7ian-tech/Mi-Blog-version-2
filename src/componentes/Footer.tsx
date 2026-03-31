@@ -26,6 +26,7 @@ const Footer = () => {
               <span className="text-sm font-medium">Instagram</span>
             </a>
           </div>
+
         </div>
 
         {/* Línea Divisoria Interna */}
@@ -51,6 +52,27 @@ const Footer = () => {
 
       </div>
     </footer>
+
+
+    //   <footer className="w-full py-12 border-t border-[#373943] mt-20">
+    //   <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+    //     <div className="text-center md:text-left">
+    //       <p className="text-[#f2f2f2] font-bold tracking-tighter">LAB <span className="text-[#DE8676]">POKEDEX</span></p>
+    //       <p className="text-[#A1A1A1] text-xs mt-1 uppercase tracking-widest">General La Madrid • 2026</p>
+    //     </div>
+        
+    //     <div className="flex gap-6 text-[#A1A1A1] text-sm font-medium">
+    //       <a href="#" className="hover:text-[#DE8676] transition-colors">GitHub</a>
+    //       <a href="#" className="hover:text-[#DE8676] transition-colors">LinkedIn</a>
+    //       <a href="#" className="hover:text-[#DE8676] transition-colors">Portfolio</a>
+    //     </div>
+
+    //     <p className="text-[#A1A1A1] text-[10px] uppercase tracking-[0.3em]">
+    //       Hecho con ❤️ en <span className="text-white">Argentina</span>
+    //     </p>
+    //   </div>
+    // </footer>
+    
   );
 };
 
