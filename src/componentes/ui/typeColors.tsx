@@ -1,5 +1,5 @@
 
-const PokeTypeColors: { [key: string]: string } = {
+const typeColors: { [key: string]: string } = {
   fire: '#FF4422',
   water: '#3399FF',
   grass: '#77CC55',
@@ -21,4 +21,4 @@ const PokeTypeColors: { [key: string]: string } = {
 };
 
 
-export default PokeTypeColors
+export default typeColors
