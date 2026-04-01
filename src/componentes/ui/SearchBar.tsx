@@ -8,10 +8,16 @@ function SearchBar({ onSearch }: SearchBarProps) {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Foco automático al montar
-  useEffect(() => {
+  // Foco automático SOLO si no hay una búsqueda previa (indicativo de que venimos de afuera)
+useEffect(() => {
+  const hasHistory = sessionStorage.getItem("pokedex_cache");
+  
+  // Si no hay caché, es la primera entrada, le damos foco.
+  // Si hay caché, probablemente está volviendo, dejamos el scroll en paz.
+  if (!hasHistory) {
     inputRef.current?.focus();
-  }, []);
+  }
+}, []);
 
   // Lógica de Debounce (400ms)
   useEffect(() => {

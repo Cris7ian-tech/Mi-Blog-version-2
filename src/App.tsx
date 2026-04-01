@@ -11,6 +11,7 @@ import PokedexPage from "./pages/PokedexPage.tsx";
 import PokemonDetail from "./pages/PokemonDetail.tsx";
 import HooksPage from "./pages/HooksPage.tsx";
 import FacturacionPage from "./pages/FacturacionPage.tsx";
+import TaskLabPage from "./pages/TaskLabPage.tsx";
 
 import Footer from "./componentes/Footer.tsx";
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="/hooks" element={<HooksPage isDark={true}/>} />
             <Route path="/facturacion" element={<FacturacionPage />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/tasklab" element={<TaskLabPage />} />
             <Route path="/contacto" element={<Contacto />} />
           </Routes>
         </main>
