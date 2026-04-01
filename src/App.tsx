@@ -29,7 +29,7 @@ function App() {
         <main className="grow w-full">
           <Routes>
             <Route path="/" element={<MainLayout />} />
-            <Route path="/pokedex" element={<PokedexPage isDark={true}/>} />
+            <Route path="/pokedex" element={<PokedexPage />} />
             <Route path="/pokedex/:name" element={<PokemonDetail />} />
             <Route path="/hooks" element={<HooksPage isDark={true}/>} />
             <Route path="/facturacion" element={<FacturacionPage />} />

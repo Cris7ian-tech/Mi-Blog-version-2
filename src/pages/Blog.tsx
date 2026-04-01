@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import TaskLabPage from "./TaskLabPage.tsx";
 import Card from "../componentes/ui/Card"
 import Pagination from "../componentes/Pagination.tsx";
 // import CardNoticias from"../componentes/ui/CardNoticias.tsx"
@@ -15,7 +16,7 @@ const Blog = () => {
   return (
     <>
       
-
+      <TaskLabPage></TaskLabPage>
       <section className="min-h-screen flex flex-col items-center justify-center p-8">
         <h2 className="text-3xl font-bold text-white mb-8">
           Artículos recientes

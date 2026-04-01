@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-// interface TaskLabProps {
-//   id: string;
-//   task: string;
-//   completed: boolean;
-// }
+interface TaskLabProps {
+  id: string;
+  task: string;
+  name: string;
+  completed: boolean;
+}
 
 const TaskLabPage = () => {
   const [newTaskName, setNewTaskName] = useState(""); // [task, setTask]
-  
+  //mostrar tareas en pantalla
+  const [taskItemens, setTaskItems] = useState([
+    { id: 1, task: "Tarea 1", completed: false },
+    { id: 2, task: "Tarea 2", completed: false },
+    { id: 3, task: "Tarea 3", completed: false },
+  ])
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => { //sacamos error tipo any de e
+  const handleCreateTask = (e: React.FormEvent<HTMLFormElement>) => { //sacamos error tipo any de e
     e.preventDefault();
     localStorage.setItem("task", newTaskName);
     setNewTaskName("");
@@ -19,19 +25,21 @@ const TaskLabPage = () => {
 
   return (
     <>
-    {/* Card para Task Lab */}
-      <div className="flex iyems-center justify-center max-w-7xl mx-auto px-6 py-20 text-center">
+    <section className="min-h-screen flex flex-col items-center justify-center p-8">
+      {/* Card para Task Lab */}
+      <div className="flex items-center justify-center max-w-7xl mx-auto px-6 py-20 text-center">
         <NavLink to="/tasklab">
           <h2 className="text-2xl font-bold text-white group-hover:text-[#DE8676]">
-            Task Lab
+            <span className="text-[#DE8676] group-hover:text-text-[#F2F2F2] text-5xl">Task</span> 
+            <span className="text-[#F2F2F2] group-hover:text-[#DE8676] text-5xl">Lab</span>
           </h2>
-          <p className="text-[#A1A1A1] mt-2">
+          <p className="text-[#A1A1A1] mt-2 text-xl">
             Gestor de misiones con almacenamiento local y lógica CRUD.
           </p>
         </NavLink>
       </div>
 
-      <form onSubmit={handleSubmit} >
+      <form onSubmit={handleCreateTask} >
         <input
           type="text"
           placeholder="Insert New task"
@@ -54,6 +62,24 @@ const TaskLabPage = () => {
           Delete All
         </button>
       </form>
+      {/* tabla de tareas */}
+      <table className="mt-10 w-full max-w-sm border-separate border-spacing-y-2">
+        <thead>
+          <tr>
+            <th className="text-[#DE8676] text-left text-xs uppercase tracking-[0.3em] pb-4">Misiones en curso</th>
+          </tr>
+        </thead>
+        <tbody>
+          {taskItemens.map((item) => (
+            <tr key={item.id}>
+              <td className="text-white border border-[#A0A0A0] p-2 text-xl italic font-bold tracking-widest">{item.task}</td>
+            </tr>
+          ))
+          }
+        </tbody>
+      </table>
+    </section>
+    
     </>
   );
 };    
