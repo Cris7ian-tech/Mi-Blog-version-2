@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { NavLink } from "react-router-dom";
 
 // interface TaskLabProps {
 //   id: string;
@@ -11,7 +11,7 @@ const TaskLabPage = () => {
   const [newTaskName, setNewTaskName] = useState(""); // [task, setTask]
   
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => { //sacamos error tipo any de e
     e.preventDefault();
     localStorage.setItem("task", newTaskName);
     setNewTaskName("");
