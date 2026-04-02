@@ -1,6 +1,7 @@
 import "./index.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ConsoleBlog from "./componentes/ConsoleBlog/ConsoleBlog.tsx";
 import Blog from "./pages/Blog.tsx";
 import Contacto from "./pages/Contacto.tsx";
 
@@ -10,7 +11,6 @@ import MainLayout from "./pages/MainLayout.tsx";
 import PokedexPage from "./pages/PokedexPage.tsx";
 import PokemonDetail from "./pages/PokemonDetail.tsx";
 import HooksPage from "./pages/HooksPage.tsx";
-import FacturacionPage from "./pages/FacturacionPage.tsx";
 import TaskLabPage from "./pages/TaskLabPage.tsx";
 
 import Footer from "./componentes/Footer.tsx";
@@ -32,7 +32,7 @@ function App() {
             <Route path="/pokedex" element={<PokedexPage />} />
             <Route path="/pokedex/:name" element={<PokemonDetail />} />
             <Route path="/hooks" element={<HooksPage isDark={true}/>} />
-            <Route path="/facturacion" element={<FacturacionPage />} />
+            <Route path="/terminal" element={<ConsoleBlog />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/tasklab" element={<TaskLabPage />} />
             <Route path="/contacto" element={<Contacto />} />

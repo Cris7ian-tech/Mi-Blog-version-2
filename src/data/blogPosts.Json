@@ -1,0 +1,12 @@
+[
+  {
+    "id": "intro",
+    "filename": "bienvenidos.txt",
+    "content": "¡Hola! Soy Cristian. Bienvenidos a mi terminal personal desde General La Madrid."
+  },
+  {
+    "id": "mapping",
+    "filename": "la_colina.svg",
+    "content": "Proyecto de vectorización del mapa de La Colina usando Inkscape. Detalle de precisión 100%."
+  }
+]

@@ -48,11 +48,14 @@ const MainLayout = () => {
             <p className="text-[#A1A1A1] mt-4 text-sm leading-relaxed">Biblioteca de artículos sobre lógica fundamental.</p>
           </Link>
 
-          <div className="p-10 rounded-[2.5rem] border border-dashed border-[#373943] bg-[#2D2F39]/30 flex flex-col items-center text-center opacity-50">
-            <span className="text-6xl mb-6 block grayscale">🏗️</span>
-            <h3 className="text-xl font-bold text-white">Facturación</h3>
-            <p className="text-[#A1A1A1] mt-4 text-sm leading-relaxed">Próximo proyecto: Gestión y PDF.</p>
-          </div>
+          {/* 3. PROYECTO: CONSOLE BLOG (Activado) */}
+          <Link to="/terminal" className="group p-10 rounded-[2.5rem] transition-all duration-500 hover:-translate-y-3 bg-[#2D2F39] border border-[#373943] hover:border-[#DE8676]/40 shadow-xl flex flex-col items-center text-center">
+            <span className="text-6xl mb-6 grayscale group-hover:grayscale-0 transition-all">🖥️</span>
+            <h3 className="text-xl font-bold text-white group-hover:text-[#DE8676] transition-colors">Console Blog</h3>
+            <p className="text-[#A1A1A1] mt-4 text-sm leading-relaxed">
+              Explorá mis artículos mediante una terminal interactiva.
+            </p>
+          </Link>
 
         </div>
       </section>
