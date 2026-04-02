@@ -18,7 +18,6 @@ const TaskLabPage = (  ) => {
   //Creador de  nueva tarea comprobando que no exista en la lista para evitar duplicados, si no existe se agrega al estado de taskItems con un nuevo id generado por Date.now() y el estado de completed en false.
   const createTask = () => {
 
-    alert("Creando Tarea: " + newTaskName);
     //Ante todo Verificamos que no esté vacío (siempre es bueno)
     if (newTaskName.trim() === "")  return;
       
@@ -64,6 +63,17 @@ const TaskLabPage = (  ) => {
     createTask();
   
     }
+
+
+
+    // Toggle Checklist:  ¡La casilla aparece tildada!
+    const toggleTask = (id: number) => {
+      setTaskItems(
+        taskItems.map((t) =>
+          t.id === id ? { ...t, completed: !t.completed } : t,
+        ),
+      );
+    };
 
 
 
@@ -151,9 +161,24 @@ const TaskLabPage = (  ) => {
 
           {taskItems.map((task) => (
 
-            <tr key={task.id}>
+            <tr key={task.id} className="group">
 
-              <td className="text-white border border-[#A0A0A0] p-2 text-xl italic font-bold tracking-widest">{task.task}</td>
+              <td className={`text-white border border-[#A0A0A0] p-2 text-xl italic font-bold tracking-widest transition-all ${
+                task.completed ? "line-through opacity-40 text-[#DE8676]" : ""
+                }`}
+                >
+                  
+                {task.task}
+              </td>
+
+              <td className="p-2 border border-[#A0A0A0] text-center">
+                <input 
+                type="checkbox" 
+                checked={task.completed} 
+                onChange={() => toggleTask(task.id)} // Pasamos la función toggleTask como prop{ toggleTask }
+                className="cursor-pointer accent-[#DE8676] w-5 h-5"
+              />
+              </td>
 
             </tr>
 
