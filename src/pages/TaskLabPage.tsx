@@ -77,124 +77,133 @@ const TaskLabPage = (  ) => {
 
 
 
+    //Borrar tarea
+    const deleteTask = (id: number) => {
+      // "Mantenemos todas las tareas cuyo ID sea distinto al que acabo de tocar"
+      const updatedTasks = taskItems.filter((t) => t.id !== id);
+      setTaskItems(updatedTasks);
+    };
+
+
+
+    const deleteAllTasks = () => {
+      if (window.confirm("¿Estás seguro de que quieres eliminar todas las misiones?")) {
+        setTaskItems([]); // Vaciamos el array y el useEffect hará el resto
+      }
+    };
+
+
+
   return (
-
     <>
+      <section className="min-h-screen flex flex-col items-center justify-center p-8">
+        {/* Card para Task Lab */}
 
-    <section className="min-h-screen flex flex-col items-center justify-center p-8">
+        <div className="flex items-center justify-center max-w-7xl mx-auto px-6 py-20 text-center">
+          <NavLink to="/tasklab">
+            <h2 className="text-2xl font-bold text-white group-hover:text-[#DE8676]">
+              <span className="text-[#DE8676] group-hover:text-text-[#F2F2F2] text-5xl">
+                Task
+              </span>
 
-      {/* Card para Task Lab */}
+              <span className="text-[#F2F2F2] group-hover:text-[#DE8676] text-5xl">
+                Lab
+              </span>
+            </h2>
 
-      <div className="flex items-center justify-center max-w-7xl mx-auto px-6 py-20 text-center">
+            <p className="text-[#A1A1A1] mt-2 text-xl">
+              Gestor de misiones con almacenamiento local y lógica CRUD.
+            </p>
+          </NavLink>
+        </div>
 
-        <NavLink to="/tasklab">
+        <form onSubmit={handleCreateTask}>
+          <input
+            type="text"
+            placeholder="Insert New task"
+            value={newTaskName}
+            onChange={(e) => setNewTaskName(e.target.value)}
+            className="px-4 py-2 rounded-md bg-[#2D2F39] border border-[#373943] text-white focus:outline-none focus:ring-2 focus:ring-[#DE8676] w-full max-w-sm mx-auto mb-8"
+          />
 
-          <h2 className="text-2xl font-bold text-white group-hover:text-[#DE8676]">
+          <button
+            type="submit"
+            className="text-white border border-amber-500 p-1.5 ml-2.5"
+          >
+            Save Task
+          </button>
 
-            <span className="text-[#DE8676] group-hover:text-text-[#F2F2F2] text-5xl">Task</span>
+          <button
+            onClick={ deleteAllTasks }
+            className="text-white border border-amber-200 p-1.5 ml-2.5"
+          >
+            Delete All
+          </button>
+        </form>
 
-            <span className="text-[#F2F2F2] group-hover:text-[#DE8676] text-5xl">Lab</span>
+        {/* tabla de tareas */}
 
-          </h2>
-
-          <p className="text-[#A1A1A1] mt-2 text-xl">
-
-            Gestor de misiones con almacenamiento local y lógica CRUD.
-
-          </p>
-
-        </NavLink>
-
-      </div>
-
-
-
-      <form onSubmit={handleCreateTask} >
-
-        <input
-          type="text"
-          placeholder="Insert New task"
-          value={newTaskName}
-          onChange={(e) => setNewTaskName(e.target.value)}
-          className="px-4 py-2 rounded-md bg-[#2D2F39] border border-[#373943] text-white focus:outline-none focus:ring-2 focus:ring-[#DE8676] w-full max-w-sm mx-auto mb-8"
-        />
-
-
-        <button
-
-          type="submit"
-          className="text-white border border-amber-500 p-1.5 ml-2.5"
-        >
-          Save Task
-
-        </button>
-
-
-
-        <button
-
-          onClick={() => alert("borrado")}
-          className="text-white border border-amber-200 p-1.5 ml-2.5"
-        >
-
-          Delete All
-
-        </button>
-
-      </form>
-
-      {/* tabla de tareas */}
-
-      <table className="mt-10 w-full max-w-sm border-separate border-spacing-y-2">
-        
-        <thead>
-          
-          <tr>
-
-            <th className="text-[#DE8676] text-left text-xs uppercase tracking-[0.3em] pb-4">Misiones en curso</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {taskItems.map((task) => (
-
-            <tr key={task.id} className="group">
-
-              <td className={`text-white border border-[#A0A0A0] p-2 text-xl italic font-bold tracking-widest transition-all ${
-                task.completed ? "line-through opacity-40 text-[#DE8676]" : ""
-                }`}
-                >
-                  
-                {task.task}
-              </td>
-
-              <td className="p-2 border border-[#A0A0A0] text-center">
-                <input 
-                type="checkbox" 
-                checked={task.completed} 
-                onChange={() => toggleTask(task.id)} // Pasamos la función toggleTask como prop{ toggleTask }
-                className="cursor-pointer accent-[#DE8676] w-5 h-5"
-              />
-              </td>
-
+        <table className="mt-10 w-full max-w-sm border-separate border-spacing-y-2">
+          <thead>
+            <tr>
+              <th className="text-[#DE8676] text-left text-xs uppercase tracking-[0.3em] pb-4">
+                Misiones en curso
+              </th>
             </tr>
+          </thead>
 
-          ))
+          <tbody>
+            {taskItems.map((task) => (
+              <tr key={task.id} className="group">
+                <td
+                  className={`text-white border border-[#A0A0A0] p-2 text-xl italic font-bold tracking-widest transition-all ${
+                    task.completed
+                      ? "line-through opacity-40 text-[#DE8676]"
+                      : ""
+                  }`}
+                >
+                  {task.task}
+                </td>
 
-          }
+                {/* 2. Celda de la Casilla de Verificación */}
+                <td className="p-2 border border-[#A0A0A0] text-center">
+                  <input
+                    type="checkbox"
+                    checked={task.completed}
+                    onChange={() => toggleTask(task.id)} 
+                    className="cursor-pointer accent-[#DE8676] w-5 h-5"
+                  />
+                </td>
 
-        </tbody>
-
-      </table>
-
-    </section>
-
-
+                {/* 3. Celda del Botón Eliminar */}
+                <td className="p-3 text-center">
+                  <button
+                    onClick={() => deleteTask(task.id)}
+                    className="text-[#A1A1A1] hover:text-red-400 transition-colors p-1"
+                    title="Eliminar misión"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
     </>
-
   );
 };    
 
