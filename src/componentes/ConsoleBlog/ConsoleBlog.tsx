@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import postsData from "../../data/blogPosts.json" 
-
+import postsData from "../../data/blogPosts.json";
+import Typewriter from "./Typewriter";
 
 interface Post {
   id: string;
@@ -14,9 +14,6 @@ interface HistoryItem {
   command: string;
   output: string | string[];
 }
-
-
-
 
 const ConsoleBlog = () => {
   const [input, setInput] = useState("");
@@ -46,7 +43,7 @@ const ConsoleBlog = () => {
           "  cat [file] - Leer contenido de un archivo",
           "  whoami   - Información del desarrollador",
           "  clear    - Limpiar la terminal",
-          "  date     - Ver fecha y hora actual"
+          "  date     - Ver fecha y hora actual",
         ];
         break;
 
@@ -60,13 +57,18 @@ const ConsoleBlog = () => {
           response = "Error: Especifica un archivo. Ej: cat bienvenidos.txt";
         } else {
           // 3. Aquí también tipamos la búsqueda
-          const post = postsData.find((p: Post) => p.filename.toLowerCase() === argument);
-          response = post ? post.content : `Error: Archivo '${argument}' no encontrado.`;
+          const post = postsData.find(
+            (p: Post) => p.filename.toLowerCase() === argument,
+          );
+          response = post
+            ? post.content
+            : `Error: Archivo '${argument}' no encontrado.`;
         }
         break;
 
       case "whoami":
-        response = "Cristian // Web Developer // General La Madrid, AR. // Native Plant Scout";
+        response =
+          "Cristian // Web Developer // General La Madrid, AR. // Native Plant Scout";
         break;
 
       case "date":
@@ -91,13 +93,13 @@ const ConsoleBlog = () => {
 
   return (
     <section className="min-h-screen bg-[#1A1C23] flex flex-col items-center justify-center p-6">
-      
       {/* Título de la sección (opcional) */}
-      <h2 className="text-[#DE8676] font-mono mb-8 tracking-[0.5em] uppercase text-sm">Terminal Interface</h2>
+      <h2 className="text-[#DE8676] font-mono mb-8 tracking-[0.5em] uppercase text-sm">
+        Terminal Interface
+      </h2>
 
       {/* Ventana Estilo MAC */}
       <div className="w-full max-w-3xl bg-[#2D2F39]/95 backdrop-blur-sm rounded-lg shadow-2xl border border-[#373943] overflow-hidden flex flex-col">
-        
         {/* Barra Superior Mac */}
         <div className="bg-[#373943]/80 px-4 py-3 flex items-center justify-between border-b border-[#1A1C23]/30">
           <div className="flex gap-2">
@@ -112,7 +114,7 @@ const ConsoleBlog = () => {
         </div>
 
         {/* Cuerpo de la Terminal */}
-        <div 
+        <div
           ref={scrollRef}
           className="p-6 h-[450px] overflow-y-auto font-mono text-sm leading-relaxed scrollbar-thin scrollbar-thumb-[#373943]"
         >
@@ -123,20 +125,33 @@ const ConsoleBlog = () => {
           </div>
 
           {/* Historial de comandos */}
-          {history.map((item, index) => (
-            <div key={index} className="mb-4 animate-in fade-in slide-in-from-left-1 duration-300">
-              <div className="flex items-center gap-2 text-[#27C93F]">
-                <span>➜</span>
-                <span className="text-[#DE8676]">~/blog</span>
-                <span className="text-white">{item.command}</span>
+          {history.map(
+            (
+              item,
+              i, // Usamos 'i' para el historial
+            ) => (
+              <div
+                key={i}
+                className="mb-4 animate-in fade-in slide-in-from-left-1 duration-300"
+              >
+                {/* Agregamos de vuelta la línea del comando escrito */}
+                <div className="flex items-center gap-2 text-[#27C93F]">
+                  <span>➜</span>
+                  <span className="text-[#DE8676]">~/blog</span>
+                  <span className="text-white">{item.command}</span>
+                </div>
+
+                {/* Respuesta de la terminal */}
+                <div className="mt-1 text-[#A1A1A1] whitespace-pre-wrap pl-4 border-l border-[#373943] ml-1">
+                  {Array.isArray(item.output) ? (
+                    item.output.map((line, j) => <div key={j}>{line}</div>) // Usamos 'j' para las líneas internas
+                  ) : (
+                    <Typewriter text={item.output} speed={60} delay={500} />
+                  )}
+                </div>
               </div>
-              <div className="mt-1 text-[#A1A1A1] whitespace-pre-wrap pl-4 border-l border-[#373943] ml-1">
-                {Array.isArray(item.output) 
-                  ? item.output.map((line, i) => <div key={i}>{line}</div>) 
-                  : item.output}
-              </div>
-            </div>
-          ))}
+            ),
+          )}
 
           {/* Línea de Entrada Activa */}
           <form onSubmit={handleCommand} className="flex items-center gap-2">
