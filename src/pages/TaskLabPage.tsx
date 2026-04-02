@@ -1,24 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
-// interface TaskLabProps {
-//   id: string;
-//   task: string;
-//   name: string;
-//   completed: boolean;
-// }
+interface Task {
+  id: number;
+  task: string;
+  completed: boolean;
+}
 
 
-const TaskLabPage = () => {
+const TaskLabPage = (  ) => {
 
   const [newTaskName, setNewTaskName] = useState(""); // [task, setTask]
 
   //Mostrar Lista de tareas en pantalla
-  const [taskItems, setTaskItems] = useState([
-    { id: 1, task: "Tarea 1", completed: false },
-    { id: 2, task: "Tarea 2", completed: false },
-    { id: 3, task: "Tarea 3", completed: false },
-  ])
+  const [taskItems, setTaskItems] = useState<Task[]>([]);
 
   //Creador de  nueva tarea comprobando que no exista en la lista para evitar duplicados, si no existe se agrega al estado de taskItems con un nuevo id generado por Date.now() y el estado de completed en false.
   const createTask = () => {
@@ -29,14 +24,12 @@ const TaskLabPage = () => {
       
     //Luego VERIFICACIÓN: ¿Ya existe?
     const exists = taskItems.find(task => task.task.toLowerCase() === newTaskName.toLowerCase());
-    
+    //console.log("¿Existe la tarea?", exists);  
+
     if (!exists) {
       //Si NO existe, lo agregamos a la lista de tareas
       const updatedTasks = [...taskItems, { id: Date.now(), task: newTaskName, completed: false }];
-    setTaskItems(updatedTasks);
-
-    // Guardamos la LISTA COMPLETA en el local storage (como texto)
-    localStorage.setItem("task_list", JSON.stringify(updatedTasks))
+      setTaskItems(updatedTasks);
 
     setNewTaskName(""); // Limpiamos el input
     } else {
@@ -45,6 +38,26 @@ const TaskLabPage = () => {
     }
 
     };
+
+
+    //Cargar tareas desde el local storage al iniciar la página
+    useEffect(() => {
+      const data = localStorage.getItem("task_list");
+
+      if (data) {
+        setTaskItems(JSON.parse(data));
+      }
+    }, []) // [] significa: "Hacé esto solo UNA VEZ al cargar la página"
+
+
+
+    //Guardar tareas en el local storage
+    //Se ejecuta CADA VEZ que 'taskItems' cambie
+    useEffect(() => {
+      localStorage.setItem("task_list", JSON.stringify(taskItems));
+    }, [taskItems]) // Cada vez que cambie taskItems, guardamos la lista actualizada en el local storage
+
+
 
     const handleCreateTask = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

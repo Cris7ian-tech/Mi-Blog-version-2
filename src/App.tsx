@@ -34,7 +34,7 @@ function App() {
             <Route path="/hooks" element={<HooksPage isDark={true}/>} />
             <Route path="/facturacion" element={<FacturacionPage />} />
             <Route path="/blog" element={<Blog />} />
-            <Route path="/tasklab" element={<TaskLabPage TaskLabPage={TaskLabPage}/>} />
+            <Route path="/tasklab" element={<TaskLabPage />} />
             <Route path="/contacto" element={<Contacto />} />
           </Routes>
         </main>
