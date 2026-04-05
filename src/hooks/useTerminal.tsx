@@ -1,6 +1,6 @@
 // src/hooks/useTerminal.ts
 import { useState } from "react";
-import type { HistoryItem } from "../componentes/ConsoleBlog/types";
+import type { HistoryItem, Post } from "../componentes/ConsoleBlog/types";
 
 
 

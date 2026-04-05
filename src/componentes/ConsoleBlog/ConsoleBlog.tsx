@@ -11,11 +11,13 @@ import type { HistoryItem, Post } from "./types";
 const ConsoleBlog = () => {
   const [input, setInput] = useState("");
   
-
   const { history, processCommand } = useTerminal();
 
   const scrollRef = useRef<HTMLDivElement>(null);
   // const typedPosts = postsData as Post[];
+
+  //Nuevo estado: historial navegable con ↑ ↓ como una terminal real
+  const [_historyIndex, setHistoryIndex] = useState< number | null>(null);
 
   // Auto-scroll al final de la consola cada vez que el historial cambia
   useEffect(() => {
@@ -33,6 +35,7 @@ const ConsoleBlog = () => {
     if (!input.trim()) return;
     processCommand(input, postsData as Post[]);
     setInput("");
+    setHistoryIndex(null); // Reiniciamos el índice al enviar un comando
   };
 
   const renderOutput = (item: HistoryItem) => {
@@ -46,11 +49,51 @@ const ConsoleBlog = () => {
       // case "component":
       //   return item.output;
 
-      default:         
+      default: {        
         const _exhaustiveCheck: never = item;
         return _exhaustiveCheck;
+      }
     }
   };
+
+    // Creamos evento de teclado (Historial navegable con flechas ↑ ↓)
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+
+    if (history.length === 0) return;
+
+    setHistoryIndex((prev) => {
+      const newIndex =
+        prev === null ? history.length - 1 : Math.max(0, prev - 1);
+
+      setInput(history[newIndex].command);
+      return newIndex;
+    });
+  }
+
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+
+    if (history.length === 0) return;
+
+    setHistoryIndex((prev) => {
+      if (prev === null) return null;
+
+      const newIndex = prev + 1;
+
+      // si se pasa del último → limpiar input
+      if (newIndex >= history.length) {
+        setInput("");
+        return null;
+      }
+
+      setInput(history[newIndex].command);
+      return newIndex;
+    });
+  }
+};
+
 
   return (
     <section className="min-h-screen bg-[#1A1C23] flex flex-col items-center justify-center p-6">
@@ -114,6 +157,7 @@ const ConsoleBlog = () => {
               className="bg-transparent border-none outline-none text-white flex-1 caret-[#DE8676] focus:ring-0"
               spellCheck="false"
               autoComplete="off"
+              onKeyDown={handleKeyDown} // Función para manejar navegación con flechas
             />
           </form>
         </div>
@@ -121,5 +165,6 @@ const ConsoleBlog = () => {
     </section>
   );
 };
+
 
 export default ConsoleBlog;
