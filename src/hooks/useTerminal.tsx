@@ -1,31 +1,99 @@
 // src/hooks/useTerminal.ts
+import { useState } from "react";
+import type { HistoryItem } from "../componentes/ConsoleBlog/types";
 
-export const useTerminal = () => {
-  const [history, setHistory] = useState<string[]>([]);
 
-  const processCommand = (command: string) => {
-    const cmd = command.toLowerCase().trim();
-    let response = "";
 
-    switch (cmd) {
-      case "help":
-        response = "Comandos disponibles: ls, cat [archivo], clear, whoami, help";
+
+
+const useTerminal = () => {
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+
+  const processCommand = (command: string, posts: Post[]) => {
+    const cleanInput = command.toLowerCase().trim();
+    const [cmd, ...args] = cleanInput.split(" ");
+    const argument = args.join(" ");
+
+    let response: HistoryItem;
+
+  switch (cmd) {
+    case "help":
+      response = {
+        type: "list",
+        command,
+        output: [
+          "Comandos disponibles:",
+          "ls       - Listar archivos",
+          "cat [file] - Leer archivo",
+          "whoami   - Info del desarrollador",
+          "clear    - Limpiar terminal",
+          "date     - Fecha actual",
+        ],
+      }
+      break;
+
+    case "ls":
+      response = {
+        type: "list",
+        command,
+        output: posts.map((p) => p.filename),
+      };
+      break;
+
+      case "cat":
+        if (!argument) {
+          response = {
+            type: "text",
+            command,
+            output: "Error: especifica un archivo. Ej: cat intro.md",
+          };
+        } else {
+          const post = posts.find((p) => p.filename.toLowerCase() === argument);
+          
+          response = {
+            type: "text",
+            command,
+            output: post ? post.content : `Archivo no encontrado: ${argument}`,
+          };
+        }
         break;
-      case "ls":
-        response = "intro.md  proyectos.js  inkscape-map.svg  contacto.txt";
-        break;
-      case "whoami":
-        response = "Cristian — Web Developer & Native Plant Enthusiast — La Madrid, Arg.";
-        break;
-      case "clear":
-        setHistory([]);
-        return;
-      default:
-        response = `Comando no encontrado: ${cmd}. Escribí 'help' para asistencia.`;
-    }
 
-    setHistory((prev) => [...prev, `➜ ~/blog ${command}`, response]);
-  };
+        case "whoami":
+        response = {
+          type: "text",
+          command,
+          output:
+            "Cristian — Web Developer — General La Madrid, Argentina",
+        };
+        break;
+
+        case "date":
+        response = {
+          type: "text",
+          command,
+          output: new Date().toLocaleString(),
+        };
+        break;
+
+        case "clear":
+          setHistory([]);
+          return;
+
+        case "":
+            return;
+
+          default:
+            response = {
+              type: "text",
+              command,
+              output: `Comando no reconocido: ${cmd}`,
+            };
+        }
+
+  setHistory((prev) => [...prev, response]);
+};
 
   return { history, processCommand };
 };
+
+export default useTerminal;

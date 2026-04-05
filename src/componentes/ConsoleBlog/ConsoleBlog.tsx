@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 
+
 import postsData from "../../data/blogPosts.json";
 import Typewriter from "./Typewriter";
+import useTerminal from "../../hooks/useTerminal";
+import type { HistoryItem, Post } from "./types";
 
-interface Post {
-  id: string;
-  filename: string;
-  content: string;
-  type?: string;
-}
 
-interface HistoryItem {
-  command: string;
-  output: string | string[];
-}
 
 const ConsoleBlog = () => {
   const [input, setInput] = useState("");
-  const [history, setHistory] = useState<HistoryItem[]>([]);
+  
+
+  const { history, processCommand } = useTerminal();
+
   const scrollRef = useRef<HTMLDivElement>(null);
+  // const typedPosts = postsData as Post[];
 
   // Auto-scroll al final de la consola cada vez que el historial cambia
   useEffect(() => {
@@ -27,68 +24,32 @@ const ConsoleBlog = () => {
     }
   }, [history]);
 
+
+
   const handleCommand = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanInput = input.toLowerCase().trim();
-    const [cmd, ...args] = cleanInput.split(" ");
-    const argument = args.join(" ");
 
-    let response: string | string[] = "";
-
-    switch (cmd) {
-      case "help":
-        response = [
-          "Comandos disponibles:",
-          "  ls       - Listar misiones y artículos",
-          "  cat [file] - Leer contenido de un archivo",
-          "  whoami   - Información del desarrollador",
-          "  clear    - Limpiar la terminal",
-          "  date     - Ver fecha y hora actual",
-        ];
-        break;
-
-      case "ls":
-        // 2. Le decimos a TS que cada post (p) cumple con la interfaz Post
-        response = postsData.map((p: Post) => p.filename).join("    ");
-        break;
-
-      case "cat":
-        if (!argument) {
-          response = "Error: Especifica un archivo. Ej: cat bienvenidos.txt";
-        } else {
-          // 3. Aquí también tipamos la búsqueda
-          const post = postsData.find(
-            (p: Post) => p.filename.toLowerCase() === argument,
-          );
-          response = post
-            ? post.content
-            : `Error: Archivo '${argument}' no encontrado.`;
-        }
-        break;
-
-      case "whoami":
-        response =
-          "Cristian // Web Developer // General La Madrid, AR. // Native Plant Scout";
-        break;
-
-      case "date":
-        response = new Date().toLocaleString();
-        break;
-
-      case "clear":
-        setHistory([]);
-        setInput("");
-        return;
-
-      case "":
-        break;
-
-      default:
-        response = `Comando no reconocido: ${cmd}. Escribe 'help' para ver opciones.`;
-    }
-
-    setHistory([...history, { command: input, output: response }]);
+    // después acá vamos a usar processCommand
+    if (!input.trim()) return;
+    processCommand(input, postsData as Post[]);
     setInput("");
+  };
+
+  const renderOutput = (item: HistoryItem) => {
+    switch (item.type) {
+      case "text":
+        return <Typewriter text={item.output} speed={60} delay={500} />;
+
+      case "list":
+        return item.output.map((line, j) => <div key={j}>{line}</div>);
+
+      // case "component":
+      //   return item.output;
+
+      default:         
+        const _exhaustiveCheck: never = item;
+        return _exhaustiveCheck;
+    }
   };
 
   return (
@@ -125,33 +86,21 @@ const ConsoleBlog = () => {
           </div>
 
           {/* Historial de comandos */}
-          {history.map(
-            (
-              item,
-              i, // Usamos 'i' para el historial
-            ) => (
-              <div
-                key={i}
-                className="mb-4 animate-in fade-in slide-in-from-left-1 duration-300"
-              >
-                {/* Agregamos de vuelta la línea del comando escrito */}
-                <div className="flex items-center gap-2 text-[#27C93F]">
-                  <span>➜</span>
-                  <span className="text-[#DE8676]">~/blog</span>
-                  <span className="text-white">{item.command}</span>
-                </div>
-
-                {/* Respuesta de la terminal */}
-                <div className="mt-1 text-[#A1A1A1] whitespace-pre-wrap pl-4 border-l border-[#373943] ml-1">
-                  {Array.isArray(item.output) ? (
-                    item.output.map((line, j) => <div key={j}>{line}</div>) // Usamos 'j' para las líneas internas
-                  ) : (
-                    <Typewriter text={item.output} speed={60} delay={500} />
-                  )}
-                </div>
+          {history.map((item, i) => (
+            <div key={i} className="mb-4">
+              {/* Agregamos de vuelta la línea del comando escrito */}
+              <div className="flex items-center gap-2 text-[#27C93F]">
+                <span>➜</span>
+                <span className="text-[#DE8676]">~/blog</span>
+                <span className="text-white">{item.command}</span>
               </div>
-            ),
-          )}
+
+              {/* Respuesta de la terminal */}
+              <div className="mt-1 text-[#A1A1A1] whitespace-pre-wrap pl-4 border-l border-[#373943] ml-1">
+                {renderOutput(item)}
+              </div>
+            </div>
+          ))}
 
           {/* Línea de Entrada Activa */}
           <form onSubmit={handleCommand} className="flex items-center gap-2">
