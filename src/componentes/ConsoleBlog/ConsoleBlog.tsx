@@ -8,7 +8,7 @@ import type { HistoryItem, Post } from "./types";
 
 
 
-//Funcion para autocompletar (tiempo real)
+//Funcion on demand(Bajo demanda) TAB
 const getCommonPrefix = (arr: string[]) => {
   if (arr.length === 0) return "";
 
