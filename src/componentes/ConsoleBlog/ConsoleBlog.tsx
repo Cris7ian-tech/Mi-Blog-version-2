@@ -9,7 +9,9 @@ import type { HistoryItem, Post } from "./types";
 
 
 //Funcion on demand(Bajo demanda) TAB
+  
 const getCommonPrefix = (arr: string[]) => {
+
   if (arr.length === 0) return "";
 
   let prefix = arr[0];
@@ -75,41 +77,97 @@ const ConsoleBlog = () => {
     }
   };
 
-    // Creamos evento de teclado (Historial navegable con flechas ↑ ↓)
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    
-    //Autocompletar con TAB
-    if(e.key === "Tab") {
-      e.preventDefault();
-      
-      const commands = ["help", "ls", "cat", "whoami", "date", "clear"]
-      const matches = commands.filter(cmd => cmd.startsWith(input.toLowerCase()));
-        
+// 🔥 EVENTO PRINCIPAL DE TECLADO
+const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+
+  // =========================
+  // 🔷 AUTOCOMPLETADO (TAB)
+  // =========================
+  if (e.key === "Tab") {
+    e.preventDefault();
+
+    // 🧠 1. PARSEAR INPUT
+    // Separamos comando y argumentos
+    const [cmd, ...args] = input.split(" ");
+    const argument = args.join(" ");
+
+    // =========================
+    // 🔶 CASO 1: AUTOCOMPLETAR ARCHIVOS (cat)
+    // =========================
+    if (cmd === "cat") {
+
+      // 🧠 Filtrar archivos por prefijo (NO igualdad)
+      const matches = postsData.filter((post) =>
+        post.filename.toLowerCase().startsWith(argument.toLowerCase())
+      );
+
+      // ✅ 1 coincidencia → autocompletar completo
       if (matches.length === 1) {
-        setInput(matches[0]);
-      } else if (matches.length > 1) {
-        // console.log("Matches:", matches);
+        setInput(`cat ${matches[0].filename}`);
+      }
 
-        // Integrar autocompletado
-        const common = getCommonPrefix(matches);
+      // 🔥 múltiples coincidencias
+      else if (matches.length > 1) {
 
-        if (common.length > input.length) {
-          setInput(common);
-        } else {
+        const filenames = matches.map(p => p.filename);
+
+        const common = getCommonPrefix(filenames);
+
+        // 🧠 si podemos avanzar el texto → autocompletar parcial
+        if (common.length > argument.length) {
+          setInput(`cat ${common}`);
+        } 
+        // 🧠 si no → mostrar opciones en terminal
+        else {
           addToHistory({
             type: "list",
             command: input,
-            output: matches,
+            output: filenames,
           });
         }
       }
-      return;
+
+      return; // 🚨 importante: cortar ejecución
+    }
+
+    // =========================
+    // 🔷 CASO 2: AUTOCOMPLETAR COMANDOS
+    // =========================
+    const commands = ["help", "ls", "cat", "whoami", "date", "clear"];
+
+    const matches = commands.filter(cmd =>
+      cmd.startsWith(input.toLowerCase())
+    );
+
+    // ✅ 1 coincidencia → autocompletar
+    if (matches.length === 1) {
+      setInput(matches[0]);
+    }
+
+    // 🔥 múltiples coincidencias
+    else if (matches.length > 1) {
+
+      const common = getCommonPrefix(matches);
+
+      if (common.length > input.length) {
+        setInput(common);
+      } else {
+        addToHistory({
+          type: "list",
+          command: input,
+          output: matches,
+        });
       }
-    
-    
-    //Historial Navegable con Flecha ↑ 
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
+    }
+
+    return;
+  }
+
+  // =========================
+  // ⬆️ HISTORIAL (ArrowUp)
+  // =========================
+  if (e.key === "ArrowUp") {
+    e.preventDefault();
 
     if (history.length === 0) return;
 
@@ -122,8 +180,9 @@ const ConsoleBlog = () => {
     });
   }
 
-
-  //Historial Navegable con Flecha ↓
+  // =========================
+  // ⬇️ HISTORIAL (ArrowDown)
+  // =========================
   if (e.key === "ArrowDown") {
     e.preventDefault();
 
@@ -134,7 +193,6 @@ const ConsoleBlog = () => {
 
       const newIndex = prev + 1;
 
-      // si se pasa del último → limpiar input
       if (newIndex >= history.length) {
         setInput("");
         return null;
@@ -144,7 +202,6 @@ const ConsoleBlog = () => {
       return newIndex;
     });
   }
-
 };
 
 
