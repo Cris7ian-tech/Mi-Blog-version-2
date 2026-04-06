@@ -3,11 +3,13 @@ import { useState } from "react";
 import type { HistoryItem, Post } from "../componentes/ConsoleBlog/types";
 
 
-
-
-
 const useTerminal = () => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
+
+  // funcion para mostrar coincidencias de autocompletado
+  const addToHistory = (item: HistoryItem) => {
+    setHistory((prev) => [...prev, item]);
+  };
 
   const processCommand = (command: string, posts: Post[]) => {
     const cleanInput = command.toLowerCase().trim();
@@ -16,29 +18,29 @@ const useTerminal = () => {
 
     let response: HistoryItem;
 
-  switch (cmd) {
-    case "help":
-      response = {
-        type: "list",
-        command,
-        output: [
-          "Comandos disponibles:",
-          "ls       - Listar archivos",
-          "cat [file] - Leer archivo",
-          "whoami   - Info del desarrollador",
-          "clear    - Limpiar terminal",
-          "date     - Fecha actual",
-        ],
-      }
-      break;
+    switch (cmd) {
+      case "help":
+        response = {
+          type: "list",
+          command,
+          output: [
+            "Comandos disponibles:",
+            "ls       - Listar archivos",
+            "cat [file] - Leer archivo",
+            "whoami   - Info del desarrollador",
+            "clear    - Limpiar terminal",
+            "date     - Fecha actual",
+          ],
+        };
+        break;
 
-    case "ls":
-      response = {
-        type: "list",
-        command,
-        output: posts.map((p) => p.filename),
-      };
-      break;
+      case "ls":
+        response = {
+          type: "list",
+          command,
+          output: posts.map((p) => p.filename),
+        };
+        break;
 
       case "cat":
         if (!argument) {
@@ -49,7 +51,7 @@ const useTerminal = () => {
           };
         } else {
           const post = posts.find((p) => p.filename.toLowerCase() === argument);
-          
+
           response = {
             type: "text",
             command,
@@ -58,16 +60,15 @@ const useTerminal = () => {
         }
         break;
 
-        case "whoami":
+      case "whoami":
         response = {
           type: "text",
           command,
-          output:
-            "Cristian — Web Developer — General La Madrid, Argentina",
+          output: "Cristian — Web Developer — General La Madrid, Argentina",
         };
         break;
 
-        case "date":
+      case "date":
         response = {
           type: "text",
           command,
@@ -75,25 +76,25 @@ const useTerminal = () => {
         };
         break;
 
-        case "clear":
-          setHistory([]);
-          return;
+      case "clear":
+        setHistory([]);
+        return;
 
-        case "":
-            return;
+      case "":
+        return;
 
-          default:
-            response = {
-              type: "text",
-              command,
-              output: `Comando no reconocido: ${cmd}`,
-            };
-        }
+      default:
+        response = {
+          type: "text",
+          command,
+          output: `Comando no reconocido: ${cmd}`,
+        };
+    }
 
-  setHistory((prev) => [...prev, response]);
-};
+    setHistory((prev) => [...prev, response]);
+  };
 
-  return { history, processCommand };
+  return { history, processCommand, addToHistory };
 };
 
 export default useTerminal;

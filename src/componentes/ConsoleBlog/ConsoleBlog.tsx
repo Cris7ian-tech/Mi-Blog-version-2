@@ -8,11 +8,30 @@ import type { HistoryItem, Post } from "./types";
 
 
 
+//Funcion para autocompletar (tiempo real)
+const getCommonPrefix = (arr: string[]) => {
+  if (arr.length === 0) return "";
+
+  let prefix = arr[0];
+
+  for (let i = 1; i < arr.length; i++) {
+    while (!arr[i].startsWith(prefix)) {
+      prefix = prefix.slice(0, prefix.length - 1);
+
+      if (prefix === "") return "";
+    }
+  }
+
+  return prefix;
+};
+
+
 const ConsoleBlog = () => {
+
+  const { history, processCommand, addToHistory } = useTerminal();
+  
   const [input, setInput] = useState("");
   
-  const { history, processCommand } = useTerminal();
-
   const scrollRef = useRef<HTMLDivElement>(null);
   // const typedPosts = postsData as Post[];
 
@@ -58,6 +77,37 @@ const ConsoleBlog = () => {
 
     // Creamos evento de teclado (Historial navegable con flechas ↑ ↓)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    
+    //Autocompletar con TAB
+    if(e.key === "Tab") {
+      e.preventDefault();
+      
+      const commands = ["help", "ls", "cat", "whoami", "date", "clear"]
+      const matches = commands.filter(cmd => cmd.startsWith(input.toLowerCase()));
+        
+      if (matches.length === 1) {
+        setInput(matches[0]);
+      } else if (matches.length > 1) {
+        // console.log("Matches:", matches);
+
+        // Integrar autocompletado
+        const common = getCommonPrefix(matches);
+
+        if (common.length > input.length) {
+          setInput(common);
+        } else {
+          addToHistory({
+            type: "list",
+            command: input,
+            output: matches,
+          });
+        }
+      }
+      return;
+      }
+    
+    
+    //Historial Navegable con Flecha ↑ 
     if (e.key === "ArrowUp") {
       e.preventDefault();
 
@@ -72,6 +122,8 @@ const ConsoleBlog = () => {
     });
   }
 
+
+  //Historial Navegable con Flecha ↓
   if (e.key === "ArrowDown") {
     e.preventDefault();
 
@@ -92,6 +144,7 @@ const ConsoleBlog = () => {
       return newIndex;
     });
   }
+
 };
 
 
@@ -157,7 +210,8 @@ const ConsoleBlog = () => {
               className="bg-transparent border-none outline-none text-white flex-1 caret-[#DE8676] focus:ring-0"
               spellCheck="false"
               autoComplete="off"
-              onKeyDown={handleKeyDown} // Función para manejar navegación con flechas
+              onKeyDown={handleKeyDown}
+              // Función para manejar navegación con flechas
             />
           </form>
         </div>
