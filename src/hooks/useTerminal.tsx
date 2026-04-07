@@ -2,7 +2,6 @@
 import { useState } from "react";
 import type { HistoryItem, Post } from "../componentes/ConsoleBlog/types";
 
-
 const useTerminal = () => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
@@ -20,21 +19,68 @@ const useTerminal = () => {
 
     switch (cmd) {
       case "help":
-        response = {
-          type: "list",
-          command,
-          output: [
-            "Comandos disponibles:",
-            "ls       - Listar archivos",
-            "cat [file] - Leer archivo",
-            "whoami   - Info del desarrollador",
-            "clear    - Limpiar terminal",
-            "date     - Fecha actual",
-            "echo     - Hola mundo",
-            "pwd      - Ruta actual(fake)",
-            "history  - Ver historial de comandos",
-          ],
-        };
+        // 🔷 Si NO hay argumento → mostrar todos los comandos
+        if (!argument) {
+          response = {
+            type: "list",
+            command,
+            output: [
+              "Comandos disponibles:",
+              "ls       - Listar archivos",
+              "cat [file] - Leer archivo",
+              "whoami   - Info del desarrollador",
+              "clear    - Limpiar terminal",
+              "date     - Fecha actual",
+              "echo     - Hola mundo",
+              "pwd      - Ruta actual(fake)",
+              "history  - Ver historial de comandos",
+              "help [cmd]-Ayuda de un comando",
+            ],
+          };
+        }
+        // 🔶 Si HAY argumento → ayuda específica
+        else {
+          switch (argument) {
+            case "cat":
+              response = {
+                type: "text",
+                command,
+                output: "cat [file]: Muestra el contenido de un archivo",
+              };
+              break;
+
+            case "ls":
+              response = {
+                type: "text",
+                command,
+                output: "ls: Lista los archivos disponibles",
+              };
+              break;
+
+            case "echo":
+              response = {
+                type: "text",
+                command,
+                output: "echo [text]: Imprime el texto ingresado",
+              };
+              break;
+
+            case "history":
+              response = {
+                type: "text",
+                command,
+                output: "history: muestra comandos ejecutados",
+              };
+              break;
+
+            default:
+              response = {
+                type: "text",
+                command,
+                output: `No hay auda disponible para: ${argument}`,
+              };
+          }
+        }
         break;
 
       case "ls":
@@ -90,7 +136,7 @@ const useTerminal = () => {
         response = {
           type: "text",
           command,
-          output: args.length ? args.join("") : "", 
+          output: args.length ? args.join(" ") : "",
         };
         break;
 
@@ -102,15 +148,13 @@ const useTerminal = () => {
         };
         break;
 
-        case "history":
+      case "history":
         response = {
           type: "list",
           command,
           output: history.map((item) => item.command),
         };
         break;
-
-
 
       default:
         response = {
