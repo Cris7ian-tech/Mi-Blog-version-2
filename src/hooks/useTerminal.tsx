@@ -32,6 +32,7 @@ const useTerminal = () => {
             "date     - Fecha actual",
             "echo     - Hola mundo",
             "pwd      - Ruta actual(fake)",
+            "history  - Ver historial de comandos",
           ],
         };
         break;
@@ -100,6 +101,16 @@ const useTerminal = () => {
           output: "/home/cristian/console-blog",
         };
         break;
+
+        case "history":
+        response = {
+          type: "list",
+          command,
+          output: history.map((item) => item.command),
+        };
+        break;
+
+
 
       default:
         response = {
