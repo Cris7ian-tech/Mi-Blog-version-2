@@ -31,6 +31,7 @@ const useTerminal = () => {
             "clear    - Limpiar terminal",
             "date     - Fecha actual",
             "echo     - Hola mundo",
+            "pwd      - Ruta actual(fake)",
           ],
         };
         break;
@@ -89,6 +90,14 @@ const useTerminal = () => {
           type: "text",
           command,
           output: args.length ? args.join("") : "", 
+        };
+        break;
+
+      case "pwd":
+        response = {
+          type: "text",
+          command,
+          output: "/home/cristian/console-blog",
         };
         break;
 
