@@ -30,6 +30,7 @@ const useTerminal = () => {
             "whoami   - Info del desarrollador",
             "clear    - Limpiar terminal",
             "date     - Fecha actual",
+            "echo     - Hola mundo",
           ],
         };
         break;
@@ -82,6 +83,14 @@ const useTerminal = () => {
 
       case "":
         return;
+
+      case "echo":
+        response = {
+          type: "text",
+          command,
+          output: args.length ? args.join("") : "", 
+        };
+        break;
 
       default:
         response = {
