@@ -57,7 +57,7 @@ const Header = () => {
 
       {/* MENÚ MOBILE: Fondo Negro Profundo y texto Salmón */}
       <div 
-        className={`fixed inset-0 w-screen h-screen bg-[#1A1B22] z-[100] flex flex-col items-center justify-center transition-all duration-500 ease-in-out ${
+        className={`fixed inset-0 w-screen h-screen bg-[#1A1B22] z-100 flex flex-col items-center justify-center transition-all duration-500 ease-in-out ${
           isOpen ? "translate-y-0 opacity-100 visible" : "-translate-y-full opacity-0 invisible"
         }`}
       >

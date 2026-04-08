@@ -26,15 +26,15 @@ const useTerminal = () => {
             command,
             output: [
               "Comandos disponibles:",
-              "ls       - Listar archivos",
-              "cat [file] - Leer archivo",
-              "whoami   - Info del desarrollador",
-              "clear    - Limpiar terminal",
-              "date     - Fecha actual",
-              "echo     - Hola mundo",
-              "pwd      - Ruta actual(fake)",
-              "history  - Ver historial de comandos",
-              "help [cmd]-Ayuda de un comando",
+              "ls            - Listar archivos",
+              "cat [file]    - Leer archivo",
+              "whoami        - Info del desarrollador",
+              "clear         - Limpiar terminal",
+              "date          - Fecha actual",
+              "echo          - Hola mundo",
+              "pwd           - Ruta actual(fake)",
+              "history       - Ver historial de comandos",
+              "help [cmd]    -Ayuda de un comando",
             ],
           };
         }
@@ -77,7 +77,7 @@ const useTerminal = () => {
               response = {
                 type: "text",
                 command,
-                output: `No hay auda disponible para: ${argument}`,
+                output: `No hay ayuda disponible para: ${argument}`,
               };
           }
         }

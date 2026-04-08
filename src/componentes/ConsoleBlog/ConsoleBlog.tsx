@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 
-
 import postsData from "../../data/blogPosts.json";
 import Typewriter from "./Typewriter";
 import useTerminal from "../../hooks/useTerminal";
 import type { HistoryItem, Post } from "./types";
 
-
-
 //Funcion on demand(Bajo demanda) TAB
-  
-const getCommonPrefix = (arr: string[]) => {
 
+const getCommonPrefix = (arr: string[]) => {
   if (arr.length === 0) return "";
 
   let prefix = arr[0];
@@ -27,18 +23,20 @@ const getCommonPrefix = (arr: string[]) => {
   return prefix;
 };
 
-
 const ConsoleBlog = () => {
+  const [suggestion, setSuggestion] = useState("");
 
   const { history, processCommand, addToHistory } = useTerminal();
-  
+
   const [input, setInput] = useState("");
-  
+
   const scrollRef = useRef<HTMLDivElement>(null);
   // const typedPosts = postsData as Post[];
 
   //Nuevo estado: historial navegable con ↑ ↓ como una terminal real
-  const [_historyIndex, setHistoryIndex] = useState< number | null>(null);
+  const [_historyIndex, setHistoryIndex] = useState<number | null>(null);
+
+
 
   // Auto-scroll al final de la consola cada vez que el historial cambia
   useEffect(() => {
@@ -59,6 +57,7 @@ const ConsoleBlog = () => {
     setHistoryIndex(null); // Reiniciamos el índice al enviar un comando
   };
 
+
   const renderOutput = (item: HistoryItem) => {
     switch (item.type) {
       case "text":
@@ -70,141 +69,171 @@ const ConsoleBlog = () => {
       // case "component":
       //   return item.output;
 
-      default: {        
+      default: {
         const _exhaustiveCheck: never = item;
         return _exhaustiveCheck;
       }
     }
   };
 
-// 🔥 EVENTO PRINCIPAL DE TECLADO
-const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 
-  // =========================
-  // 🔷 AUTOCOMPLETADO (TAB)
-  // =========================
-  if (e.key === "Tab") {
-    e.preventDefault();
-
-    // 🧠 1. PARSEAR INPUT
-    // Separamos comando y argumentos
-    const [cmd, ...args] = input.split(" ");
-    const argument = args.join(" ");
-
+  // 🔥 EVENTO PRINCIPAL DE TECLADO
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // =========================
-    // 🔶 CASO 1: AUTOCOMPLETAR ARCHIVOS (cat)
+    // 🔷 AUTOCOMPLETADO (TAB)
     // =========================
-    if (cmd === "cat") {
+    if (e.key === "Tab") {
+      e.preventDefault();
 
-      // 🧠 Filtrar archivos por prefijo (NO igualdad)
-      const matches = postsData.filter((post) =>
-        post.filename.toLowerCase().startsWith(argument.toLowerCase())
-      );
+      const [cmd, ...args] = input.split(" ");
+      const argument = args.join(" ");
 
-      // ✅ 1 coincidencia → autocompletar completo
-      if (matches.length === 1) {
-        setInput(`cat ${matches[0].filename}`);
-      }
+      const commands = [
+        "help",
+        "ls",
+        "cat",
+        "whoami",
+        "date",
+        "clear",
+        "echo",
+        "pwd",
+        "history",
+      ];
 
-      // 🔥 múltiples coincidencias
-      else if (matches.length > 1) {
+      // =========================
+      // 🔵 1. AUTOCOMPLETAR COMANDO
+      // =========================
+      if (args.length === 0) {
+        const matches = commands.filter((c) => c.startsWith(cmd.toLowerCase()));
 
-        const filenames = matches.map(p => p.filename);
+        if (matches.length === 0) {
+          setSuggestion("");
+          return;
+        }
 
-        const common = getCommonPrefix(filenames);
+        if (matches.length === 1) {
+          setInput(matches[0]); // TAB completa
+          setSuggestion(matches[0]); // ghost también
 
-        // 🧠 si podemos avanzar el texto → autocompletar parcial
-        if (common.length > argument.length) {
-          setInput(`cat ${common}`);
-        } 
-        // 🧠 si no → mostrar opciones en terminal
-        else {
-          addToHistory({
-            type: "list",
-            command: input,
-            output: filenames,
-          });
+          return;
+        }
+        if (matches.length > 1) {
+          const common = getCommonPrefix(matches);
+
+          if (common.length > cmd.length) {
+            setInput(common);
+            setSuggestion(common);
+          } else {
+            addToHistory({
+              type: "list",
+              command: input,
+              output: matches,
+            });
+          }
+
+          return;
         }
       }
 
-      return; // 🚨 importante: cortar ejecución
-    }
 
-    // =========================
-    // 🔷 CASO 2: AUTOCOMPLETAR COMANDOS
-    // =========================
-    const commands = ["help", "ls", "cat", "whoami", "date", "clear"];
+      // =========================
+      // 🔵 2. AUTOCOMPLETAR ARCHIVOS (cat)
+      // =========================
+      if (cmd === "cat") {
+        const files = postsData.map((p) => p.filename);
 
-    const matches = commands.filter(cmd =>
-      cmd.startsWith(input.toLowerCase())
-    );
+        const matches = files.filter((f) =>
+          f.toLowerCase().startsWith(argument.toLowerCase()),
+        );
 
-    // ✅ 1 coincidencia → autocompletar
-    if (matches.length === 1) {
-      setInput(matches[0]);
-    }
+        if (matches.length === 1) {
+          const full = `${cmd} ${matches[0]}`;
+          setInput(full);
+          setSuggestion(full);
+        } else if (matches.length > 1) {
+          const common = getCommonPrefix(matches);
 
-    // 🔥 múltiples coincidencias
-    else if (matches.length > 1) {
+          if (common.length > argument.length) {
+            setInput(`${cmd} ${common}`);
+          } else {
+            addToHistory({
+              type: "list",
+              command: input,
+              output: matches,
+            });
+          }
+        }
 
-      const common = getCommonPrefix(matches);
+        return;
+      }
 
-      if (common.length > input.length) {
-        setInput(common);
-      } else {
-        addToHistory({
-          type: "list",
-          command: input,
-          output: matches,
-        });
+
+      // =========================
+      // 🔵 3. AUTOCOMPLETAR ARGUMENTO DE help
+      // =========================
+      if (cmd === "help") {
+        const matches = commands.filter((c) =>
+          c.startsWith(argument.toLowerCase()),
+        );
+
+        if (matches.length === 1) {
+          setInput(`${cmd} ${matches[0]}`);
+        } else if (matches.length > 1) {
+          addToHistory({
+            type: "list",
+            command: input,
+            output: matches,
+          });
+        }
+
+        return;
       }
     }
 
-    return;
-  }
 
-  // =========================
-  // ⬆️ HISTORIAL (ArrowUp)
-  // =========================
-  if (e.key === "ArrowUp") {
-    e.preventDefault();
+    // =========================
+    // ⬆️ HISTORIAL (ArrowUp)
+    // =========================
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
 
-    if (history.length === 0) return;
+      if (history.length === 0) return;
 
-    setHistoryIndex((prev) => {
-      const newIndex =
-        prev === null ? history.length - 1 : Math.max(0, prev - 1);
+      setHistoryIndex((prev) => {
+        const newIndex =
+          prev === null ? history.length - 1 : Math.max(0, prev - 1);
 
-      setInput(history[newIndex].command);
-      return newIndex;
-    });
-  }
-
-  // =========================
-  // ⬇️ HISTORIAL (ArrowDown)
-  // =========================
-  if (e.key === "ArrowDown") {
-    e.preventDefault();
-
-    if (history.length === 0) return;
-
-    setHistoryIndex((prev) => {
-      if (prev === null) return null;
-
-      const newIndex = prev + 1;
-
-      if (newIndex >= history.length) {
-        setInput("");
-        return null;
-      }
-
-      setInput(history[newIndex].command);
-      return newIndex;
-    });
-  }
-};
+        setInput(history[newIndex].command);
+        return newIndex;
+      });
+    }
 
 
+    // =========================
+    // ⬇️ HISTORIAL (ArrowDown)
+    // =========================
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+
+      if (history.length === 0) return;
+
+      setHistoryIndex((prev) => {
+        if (prev === null) return null;
+
+        const newIndex = prev + 1;
+
+        if (newIndex >= history.length) {
+          setInput("");
+          return null;
+        }
+
+        setInput(history[newIndex].command);
+        return newIndex;
+      });
+    }
+  };
+
+  
   return (
     <section className="min-h-screen bg-[#1A1C23] flex flex-col items-center justify-center p-6">
       {/* Título de la sección (opcional) */}
@@ -259,23 +288,56 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
           <form onSubmit={handleCommand} className="flex items-center gap-2">
             <span className="text-[#27C93F]">➜</span>
             <span className="text-[#DE8676]">~/blog</span>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              autoFocus
-              className="bg-transparent border-none outline-none text-white flex-1 caret-[#DE8676] focus:ring-0"
-              spellCheck="false"
-              autoComplete="off"
-              onKeyDown={handleKeyDown}
-              // Función para manejar navegación con flechas
-            />
+
+            <div className="relative flex-1">
+              <span className="absolute left-0 top-0 text-gray-500 pointer-events-none">
+                {input + suggestion.slice(input.length)}
+              </span>
+
+              <input
+                type="text"
+                value={input}
+                className="relative bg-transparent border-none outline-none text-white w-full"
+                onKeyDown={handleKeyDown}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setInput(value);
+
+                  const commands = [
+                    "help",
+                    "ls",
+                    "cat",
+                    "whoami",
+                    "date",
+                    "clear",
+                    "echo",
+                    "pwd",
+                    "history",
+                  ];
+
+                  const [cmd, ...args] = value.split(" ");
+
+                  if (args.length === 0) {
+                    const match = commands.find((c) =>
+                      c.startsWith(cmd.toLowerCase()),
+                    );
+
+                    if (match && match !== cmd) {
+                      setSuggestion(match);
+                    } else {
+                      setSuggestion("");
+                    }
+                  } else {
+                    setSuggestion("");
+                  }
+                }}
+              />
+            </div>
           </form>
         </div>
       </div>
     </section>
   );
 };
-
 
 export default ConsoleBlog;
