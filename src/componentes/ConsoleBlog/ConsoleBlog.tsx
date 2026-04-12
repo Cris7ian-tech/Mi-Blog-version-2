@@ -13,47 +13,91 @@ type AutocompleteResult = {
 
 const getAutocomplete = (value: string, posts: Post[]): AutocompleteResult => {
   const commands = [
-    "help",
-    "ls",
-    "cat",
-    "whoami",
-    "date",
-    "clear",
-    "echo",
-    "pwd",
-    "history",
+    "help", "ls", "cat", "whoami", "date",
+    "clear", "echo", "pwd", "history",
   ];
 
   const [cmd, ...args] = value.split(" ");
   const argument = args.join(" ");
   const normalizedCmd = cmd.toLowerCase();
 
-  // 🔹 comandos
+  // =========================
+  // 🔹 COMANDOS
+  // =========================
   if (args.length === 0) {
-    const match = commands.find((c) => c.startsWith(normalizedCmd));
+    const matches = commands.filter((c) =>
+      c.startsWith(normalizedCmd)
+    );
 
-    if (match && match !== cmd) {
-      return { suggestion: match };
+    console.log("INPUT:", normalizedCmd);
+    console.log("MATCHES:", matches);
+
+
+    if (matches.length === 0) {
+      return { suggestion: "" };
     }
 
-    return { suggestion: "" };
+    if (matches.length === 1) {
+      return { suggestion: matches[0] };
+    }
+
+    const prefix = getCommonPrefix(matches);
+    console.log("PREFIX:", prefix);
+      return { suggestion: prefix };
   }
 
-  // 🔹 argumentos
+  // =========================
+  // 🔹 ARGUMENTOS (cat)
+  // =========================
   if (normalizedCmd === "cat") {
     const files = posts.map((p) => p.filename);
 
-    const match = files.find((f) =>
-      f.toLowerCase().startsWith(argument.toLowerCase()),
+    const matches = files.filter((f) =>
+      f.toLowerCase().startsWith(argument.toLowerCase())
     );
 
-    if (match) {
-      return { suggestion: `${cmd} ${match}` };
+    if (matches.length === 0) {
+      return { suggestion: "" };
     }
+
+    if (matches.length === 1) {
+      return { suggestion: `${cmd} ${matches[0]}` };
+    }
+
+    const prefix = getCommonPrefix(matches);
+
+    return { suggestion: `${cmd} ${prefix}` };
   }
 
   return { suggestion: "" };
 };
+
+
+
+  function getCommonPrefix(matches: string[]): string {
+  if (matches.length === 0) return "";
+
+  let prefix = matches[0];
+
+  for (let i = 1; i < matches.length; i++) {
+    let j = 0;
+
+    while (
+      j < prefix.length &&
+      j < matches[i].length &&
+      prefix[j] === matches[i][j]
+    ) {
+      j++;
+    }
+
+    prefix = prefix.slice(0, j);
+  }
+
+  return prefix;
+}
+
+
+
 
 const ConsoleBlog = () => {
   const [suggestion, setSuggestion] = useState("");
@@ -82,6 +126,7 @@ const ConsoleBlog = () => {
     if (!input.trim()) return;
     processCommand(input, postsData as Post[]);
     setInput("");
+    setSuggestion("");  // ❗no hay texto Ghost en la linea siguiente
     setHistoryIndex(null); // Reiniciamos el índice al enviar un comando
   };
 
@@ -92,9 +137,6 @@ const ConsoleBlog = () => {
 
       case "list":
         return item.output.map((line, j) => <div key={j}>{line}</div>);
-
-      // case "component":
-      //   return item.output;
 
       default: {
         const _exhaustiveCheck: never = item;

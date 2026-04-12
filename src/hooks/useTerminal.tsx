@@ -125,9 +125,9 @@ const useTerminal = () => {
         };
         break;
 
-      case "clear":
-        setHistory([]);
-        return;
+      // case "clear":
+      //   setHistory([]);
+      //   return;
 
       case "":
         return;
